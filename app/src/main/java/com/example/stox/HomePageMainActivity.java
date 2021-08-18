@@ -31,6 +31,13 @@ public class HomePageMainActivity extends AppCompatActivity {
         setSupportActionBar(mainToolbar);
         tabLayout = findViewById(R.id.tabsLayout);
         viewPager2 = findViewById(R.id.viewPager2);
+        setupFragments();
+        //retrieveDataFromAPI();
+    }
+
+
+
+    private void setupFragments() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentAdapter = new FragmentAdapter(fragmentManager, getLifecycle());
         viewPager2.setAdapter(fragmentAdapter);
