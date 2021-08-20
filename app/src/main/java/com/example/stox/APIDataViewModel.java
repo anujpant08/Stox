@@ -26,7 +26,7 @@ public class APIDataViewModel extends ViewModel {
     private static final String TAG = "APIViewModel";
     private static final String API_KEY = "5LDENZCGIC5UU3VX";
     private static final String BASE_URL = "https://www.alphavantage.co/query?";
-    public static final String STOCKS_NAME_REGEX = "Symbol\\\":\\s+\\\"([^\\.]+)";
+    public static final String STOCKS_NAME_REGEX = "Symbol\":\\s+\"([^.]+)";
     private static MutableLiveData<Set<String>> stocks;
     @SuppressLint("StaticFieldLeak")
     private Context context;
@@ -51,7 +51,7 @@ public class APIDataViewModel extends ViewModel {
         AlphaVantageAPICall alphaVantageAPICall = new AlphaVantageAPICall(BASE_URL, API_KEY);
         List<String> params = new ArrayList<>();
         params.add("function=TIME_SERIES_DAILY");
-        params.add("symbol=UPL.BSE");
+        params.add("symbol=TCS.BSE");
         alphaVantageAPICall.setParams(params);
         RequestQueue queue = Volley.newRequestQueue(this.context);
         Log.d(TAG, "URL: " + alphaVantageAPICall.getURL());

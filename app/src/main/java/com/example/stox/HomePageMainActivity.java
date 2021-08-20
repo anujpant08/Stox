@@ -7,7 +7,6 @@ import android.view.Menu;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.stox.databinding.ActivityHomePageMainBinding;
@@ -15,7 +14,6 @@ import com.google.android.material.tabs.TabLayout;
 
 public class HomePageMainActivity extends AppCompatActivity {
 
-    private AppBarConfiguration appBarConfiguration;
     TabLayout tabLayout;
     ViewPager2 viewPager2;
     FragmentAdapter fragmentAdapter;
@@ -74,10 +72,4 @@ public class HomePageMainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_items, menu);
         return true;
     }
-    /*@Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_home_page_main);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
-    }*/
 }
