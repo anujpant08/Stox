@@ -54,8 +54,9 @@ public class APIDataViewModel extends ViewModel {
         params.add("symbol=TCS.BSE");
         alphaVantageAPICall.setParams(params);
         RequestQueue queue = Volley.newRequestQueue(this.context);
-        Log.d(TAG, "URL: " + alphaVantageAPICall.getURL());
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, alphaVantageAPICall.getURL(), new Response.Listener<String>() {
+        String finalURL = alphaVantageAPICall.getURL();
+        Log.d(TAG, "URL: " + finalURL);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, finalURL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
 
