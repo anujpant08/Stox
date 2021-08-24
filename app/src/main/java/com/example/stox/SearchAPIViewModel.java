@@ -15,6 +15,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -22,36 +23,34 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-public class APIDataViewModel extends ViewModel {
-    private static final String TAG = "APIViewModel";
+public class SearchAPIViewModel extends ViewModel {
+    private static final String TAG = "SearchAPIViewModel";
     private static final String API_KEY = "5LDENZCGIC5UU3VX";
     private static final String BASE_URL = "https://www.alphavantage.co/query?";
     public static final String STOCKS_NAME_REGEX = "Symbol\":\\s+\"([^.]+)";
     private static MutableLiveData<Set<Stock>> stocks;
+    private Set<Stock> updatedStocks;
     @SuppressLint("StaticFieldLeak")
     private Context context;
-    public void addStockName(Stock newStock) {
-        Set<Stock> updatedStocks = stocks.getValue();
-        assert updatedStocks != null;
-        updatedStocks.add(newStock);
-        Log.d(TAG, "New stock added = " + newStock);
+    public void addStockName() {
+        Log.d(TAG, "New stock list = " + updatedStocks);
         stocks.setValue(updatedStocks);
     }
-    public LiveData<Set<Stock>> getStocksList(Context context) {
+    public LiveData<Set<Stock>> getStocksList(Context context, String query) {
         if(stocks == null){
             stocks = new MutableLiveData<>();
             stocks.setValue(new LinkedHashSet<>());
         }
         this.context = context;
-        retrieveDataFromAPI();
+        retrieveDataFromAPI(query);
         return stocks;
     }
 
-    private void retrieveDataFromAPI() {
+    private void retrieveDataFromAPI(String query) {
         AlphaVantageAPICall alphaVantageAPICall = new AlphaVantageAPICall(BASE_URL, API_KEY);
         List<String> params = new ArrayList<>();
-        params.add("function=GLOBAL_QUOTE");
-        params.add("symbol=ITC.BSE");
+        params.add("function=SYMBOL_SEARCH");
+        params.add("keywords=" + query);
         alphaVantageAPICall.setParams(params);
         RequestQueue queue = Volley.newRequestQueue(this.context);
         String finalURL = alphaVantageAPICall.getURL();
@@ -74,15 +73,19 @@ public class APIDataViewModel extends ViewModel {
     //Helper method to extract relevant stocks data from JSON response
     private void extractJSON(String response) {
         try{
+            updatedStocks = new LinkedHashSet<>();
             JSONObject jsonObject = new JSONObject(response);
-            JSONObject globalQuote = jsonObject.getJSONObject("Global Quote");
-            //String lastRefreshed = metaData.getString("3. Last Refreshed");
-
-            Stock stock = new Stock();
-            stock.setStockSymbol(globalQuote.getString("01. symbol"));
-            stock.setLastTradePrice(globalQuote.getDouble("05. price"));
-            stock.setChangeValue(globalQuote.getString("09. change"));
-            addStockName(stock);
+            JSONArray bestMatchesArray = jsonObject.getJSONArray("bestMatches");
+            JSONObject bestMatchObject = null;
+            for(int index = 0; index < bestMatchesArray.length(); index ++){
+                bestMatchObject = (JSONObject) bestMatchesArray.get(index);
+                Stock stock = new Stock();
+                stock.setStockSymbol(bestMatchObject.get("1. symbol").toString());
+                stock.setStockName(bestMatchObject.get("2. name").toString());
+                stock.setMatchPercentage(Double.parseDouble(bestMatchObject.get("9. matchScore").toString()));
+                updatedStocks.add(stock);
+            }
+            addStockName();
         }catch (Exception exception){
             Log.e(TAG, "An exception occurred while parsing JSON: ", exception);
         }
@@ -90,3 +93,4 @@ public class APIDataViewModel extends ViewModel {
     }
 
 }
+

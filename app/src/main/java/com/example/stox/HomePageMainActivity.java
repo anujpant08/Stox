@@ -1,13 +1,12 @@
 package com.example.stox;
 
-import android.app.SearchManager;
-import android.content.ComponentName;
-import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
-import android.widget.SearchView;
+import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
@@ -29,7 +28,6 @@ public class HomePageMainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         Toolbar mainToolbar = findViewById(R.id.material_toolbar);
         mainToolbar.setTitle("Home");
-        mainToolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
         setSupportActionBar(mainToolbar);
         tabLayout = findViewById(R.id.tabsLayout);
         viewPager2 = findViewById(R.id.viewPager2);
@@ -70,11 +68,18 @@ public class HomePageMainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.menu_items, menu);
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, SearchActivity.class)));
-        searchView.setIconifiedByDefault(true);
+        getMenuInflater().inflate(R.menu.homepage_menu_items, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.home_search_button) {
+            Intent intent = new Intent(this, SearchActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+
     }
 }
