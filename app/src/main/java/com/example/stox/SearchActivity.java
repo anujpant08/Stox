@@ -1,88 +1,86 @@
 package com.example.stox;
 
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.widget.ArrayAdapter;
+import android.view.KeyEvent;
+import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SearchView;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public class SearchActivity extends AppCompatActivity {
     private static final String ENDPOINT_URL = "https://www.alphavantage.co/query?";
     private static final String API_KEY = "5LDENZCGIC5UU3VX";
     private static final String TAG = "SearchActivity";
-    private Set<String> searchList;
-    private ArrayAdapter<String> arrayAdapter;
+    private Set<Stock> searchList;
+    private SearchStockCustomAdapter arrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_activity_layout);
         Toolbar mainToolbar = findViewById(R.id.material_toolbar);
-        mainToolbar.setTitle("Browse Stocks");
+        mainToolbar.setTitle("Search");
         mainToolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
         setSupportActionBar(mainToolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         searchList = new LinkedHashSet<>();
-        arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new LinkedList<>(searchList));
+        arrayAdapter = new SearchStockCustomAdapter(this, R.layout.custom_search_stock_layout, new LinkedList<>());
         ListView listView = findViewById(R.id.search_list_view);
-        Intent intent = getIntent();
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            if(searchList != null){
-                searchList.clear();
-            }
-            performSearch(query);
-            listView.setAdapter(arrayAdapter);
-            //arrayAdapter.addAll(searchList);
-        }
-    }
-
-    private void performSearch(String query) {
-        AlphaVantageAPICall alphaVantageAPICall = new AlphaVantageAPICall(ENDPOINT_URL, API_KEY);
-        List<String> params = new ArrayList<>();
-        params.add("function=SYMBOL_SEARCH");
-        params.add("keywords=" + query);
-        alphaVantageAPICall.setParams(params);
-        String finalURL = alphaVantageAPICall.getURL();
-        RequestQueue queue = Volley.newRequestQueue(this);
-        Log.d(TAG, "URL: " + finalURL);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, finalURL, new Response.Listener<String>() {
+        listView.setAdapter(arrayAdapter);
+        SearchAPIViewModel apiDataViewModel = new ViewModelProvider(this).get(SearchAPIViewModel.class);
+        EditText editText = findViewById(R.id.search_edit_text);
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void onResponse(String response) {
-                //Get list of all stock in search results.
-                extractJSON(response);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "exception occurred: ", error);
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                boolean result = false;
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    String value = textView.getText().toString();
+                    if(arrayAdapter != null && !arrayAdapter.isEmpty() && !searchList.isEmpty()){
+                        searchList.clear();
+                        arrayAdapter.clear();
+                    }
+                    performSearch(value, apiDataViewModel);
+                    result = true;
+                }
+                return result;
             }
         });
-        stringRequest.setTag(TAG);
-        queue.add(stringRequest);
+    }
+
+    private void performSearch(String query, SearchAPIViewModel apiViewModel) {
+        apiViewModel.getStocksList(this, query).observe(this, new Observer<Set<Stock>>() {
+            @Override
+            public void onChanged(Set<Stock> updatedStocks) {
+               /* if(stocks != null){
+                    Log.d(TAG, "changed value: " + updatedStocks);
+                    //stocks.clear();
+                }else{
+                    stocks = new LinkedList<>();
+                }*/
+                Log.d(TAG, "final list : " + updatedStocks);
+                if(!arrayAdapter.isEmpty()){
+                    arrayAdapter.clear();
+                }
+                arrayAdapter.addAll(updatedStocks);
+            }
+        });
     }
 
     private void extractJSON(String response) {
@@ -98,7 +96,7 @@ public class SearchActivity extends AppCompatActivity {
                 stock.setStockSymbol(bestMatchObject.get("1. symbol").toString());
                 stock.setStockName(bestMatchObject.get("2. name").toString());
                 stock.setMatchPercentage(Double.parseDouble(bestMatchObject.get("9. matchScore").toString()));
-                searchList.add(stock.getStockSymbol() + " " + stock.getStockName());
+                searchList.add(stock);
             }
             Log.d(TAG, "Final search results: " + searchList);
             arrayAdapter.addAll(searchList);
@@ -106,28 +104,14 @@ public class SearchActivity extends AppCompatActivity {
             Log.e(TAG,"An exception occurred while trying to parse JSON: ", e);
         }
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.menu_items, menu);
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
-        //searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                arrayAdapter.clear();
-                performSearch(s);
-                return false;
-            }
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                //arrayAdapter.getFilter().filter(s);
-                return false;
-            }
-        });
-        searchView.setIconifiedByDefault(true);
-        return true;
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+
     }
 }

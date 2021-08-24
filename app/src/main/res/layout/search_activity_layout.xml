@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#000000">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/black"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="16dp">
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/material_toolbar"
@@ -21,12 +20,47 @@
 
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:id="@+id/search_bar_custom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/app_bar_layout"
+        android:layout_marginStart="@dimen/appbar_padding"
+        android:layout_marginTop="@dimen/appbar_padding"
+        android:layout_marginEnd="@dimen/appbar_padding"
+        android:layout_marginBottom="@dimen/appbar_padding"
+        android:background="#000000"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <EditText
+            android:id="@+id/search_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/custom_search_bar_background"
+            android:drawableEnd="@drawable/ic_baseline_search_24"
+            android:fontFamily="@font/open_sans_bold"
+            android:hint="Search Stocks"
+            android:importantForAutofill="no"
+            android:imeOptions="actionSearch"
+            android:inputType="textCapCharacters"
+            android:padding="12dp"
+            android:textColor="@color/primary_color"
+            android:textColorHint="#68FBFBFB">
+
+        </EditText>
+    </LinearLayout>
+
     <ListView
+        android:id="@+id/search_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/search_list_view"
-        app:layout_constraintBottom_toBottomOf="@id/app_bar_layout">
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_below="@id/search_bar_custom"
+        android:background="@color/black">
 
     </ListView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>
