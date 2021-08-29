@@ -49,12 +49,6 @@ public class StocksFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         stockSet = new LinkedHashSet<>();
-        // For testing set of stocks
-
-//        stockSet.add("RIL");
-//        stockSet.add("SAIL");
-//        stockSet.add("ITC");
-
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Stocks", Context.MODE_PRIVATE);
         @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = sharedPreferences.edit();
         String savedJSON = sharedPreferences.getString("Stocks", "Empty Stock");
@@ -80,14 +74,7 @@ public class StocksFragment extends Fragment {
         apiDataViewModel.getStocksList(getActivity()).observe(getViewLifecycleOwner(), new Observer<Set<Stock>>() {
             @Override
             public void onChanged(Set<Stock> updatedStocks) {
-               /* if(stocks != null){
-                    Log.d(TAG, "changed value: " + updatedStocks);
-                    //stocks.clear();
-                }else{
-                    stocks = new LinkedList<>();
-                }*/
                 Log.d(TAG, "final list : " + updatedStocks);
-                //stocks.addAll(updatedStocks);
                 Gson gson = new Gson();
                 stockSet.addAll(updatedStocks);
                 String updatedJSON = gson.toJson(stockSet);

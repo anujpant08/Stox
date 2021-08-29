@@ -10,16 +10,21 @@
         <entry key="app/src/main/res/layout/activity_home_page_main.xml" value="0.18432971014492755" />
         <entry key="app/src/main/res/layout/activity_homepage_tabbed.xml" value="0.23369565217391305" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_stock_detailed_view.xml" value="0.25" />
         <entry key="app/src/main/res/layout/content_home_page_main.xml" value="0.22644927536231885" />
         <entry key="app/src/main/res/layout/custom_search_stock_layout.xml" value="0.335" />
         <entry key="app/src/main/res/layout/custom_stock_text_view.xml" value="0.16757246376811594" />
+        <entry key="app/src/main/res/layout/fragment_daily_time.xml" value="0.17889492753623187" />
         <entry key="app/src/main/res/layout/fragment_first.xml" value="0.18432971014492755" />
         <entry key="app/src/main/res/layout/fragment_homepage_tabbed.xml" value="0.23369565217391305" />
         <entry key="app/src/main/res/layout/fragment_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_monthly_time.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_second.xml" value="0.18432971014492755" />
         <entry key="app/src/main/res/layout/fragment_tab.xml" value="0.22395833333333334" />
+        <entry key="app/src/main/res/layout/fragment_weekly_time.xml" value="0.17889492753623187" />
         <entry key="app/src/main/res/layout/index_fragment.xml" value="0.22644927536231885" />
         <entry key="app/src/main/res/layout/search_activity_layout.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/stock_detailed_custom_view.xml" value="0.25" />
         <entry key="app/src/main/res/layout/stocks_fragment.xml" value="0.18432971014492755" />
         <entry key="app/src/main/res/layout/tab_individual_fragment.xml" value="0.23369565217391305" />
         <entry key="app/src/main/res/menu-v26/menu_items.xml" value="0.23802083333333332" />
