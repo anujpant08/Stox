@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/black">
+
+    <TextView
+        android:id="@+id/date_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/open_sans_bold"
+        android:text="Date"
+        android:textColor="@color/primary_color"
+        android:textSize="16sp">
+
+    </TextView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/constraint_layout_daily"
+        android:layout_below="@id/date_text"
+        android:layout_marginTop="8dp">
+
+        <RelativeLayout
+            android:id="@+id/relative_layout_left"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="20dp"
+            android:padding="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/relative_layout_right"
+            app:layout_constraintHorizontal_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/day_open_text"
+                android:text="Open"
+                android:textColor="@color/white"
+                android:textSize="16sp">
+            </TextView>
+
+            <TextView
+                android:id="@+id/day_open_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:gravity="end"
+                android:text="123.00"
+                android:textColor="#97DD97"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/day_high_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/day_open_text"
+                android:text="Day High"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/day_high_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/day_open_text"
+                android:layout_alignParentEnd="true"
+                android:gravity="end"
+                android:text="123.00"
+                android:textColor="#97DD97"
+                android:textSize="16sp" />
+            <TextView
+                android:id="@+id/volume_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/day_high_text"
+                android:text="Volume"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/volume_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/day_high_text"
+                android:layout_alignParentEnd="true"
+                android:gravity="end"
+                android:text="2.3m"
+                android:textColor="@color/primary_color"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relative_layout_right"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/relative_layout_left"
+            app:layout_constraintHorizontal_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/day_close_text"
+                android:text="Close"
+                android:textColor="@color/white"
+                android:textSize="16sp">
+            </TextView>
+
+            <TextView
+                android:id="@+id/day_close_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:gravity="end"
+                android:text="345.00"
+                android:textColor="#97DD97"
+                android:textSize="16sp" />
+            <TextView
+                android:id="@+id/day_low_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/day_close_text"
+                android:text="Day Low"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/day_low_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/day_close_text"
+                android:layout_alignParentEnd="true"
+                android:gravity="end"
+                android:text="123.00"
+                android:textColor="#97DD97"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</RelativeLayout>

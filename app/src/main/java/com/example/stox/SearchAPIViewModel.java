@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public class SearchAPIViewModel extends ViewModel {
@@ -41,6 +42,7 @@ public class SearchAPIViewModel extends ViewModel {
             stocks = new MutableLiveData<>();
             stocks.setValue(new LinkedHashSet<>());
         }
+        Objects.requireNonNull(stocks.getValue()).clear();
         this.context = context;
         retrieveDataFromAPI(query);
         return stocks;

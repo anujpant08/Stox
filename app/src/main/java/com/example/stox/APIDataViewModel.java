@@ -26,7 +26,6 @@ public class APIDataViewModel extends ViewModel {
     private static final String TAG = "APIViewModel";
     private static final String API_KEY = "5LDENZCGIC5UU3VX";
     private static final String BASE_URL = "https://www.alphavantage.co/query?";
-    public static final String STOCKS_NAME_REGEX = "Symbol\":\\s+\"([^.]+)";
     private static MutableLiveData<Set<Stock>> stocks;
     @SuppressLint("StaticFieldLeak")
     private Context context;
