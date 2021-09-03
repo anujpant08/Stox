@@ -17,7 +17,9 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -35,8 +37,8 @@ public class StockDetailedViewModel extends ViewModel {
         Log.d(TAG, "Got stock in view model: " + stock);
         if(stocks == null){
             stocks = new MutableLiveData<>();
-            stocks.setValue(this.stock);
         }
+        stocks.setValue(this.stock);
         this.context = context;
         retrieveDataFromAPI();
         return stocks;
@@ -108,6 +110,8 @@ public class StockDetailedViewModel extends ViewModel {
             JSONObject jsonObject = new JSONObject(response);
             JSONObject timeSeriesDaily = jsonObject.getJSONObject("Time Series (Daily)");
             Iterator<String> keysIterator = timeSeriesDaily.keys();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = null;
             String key = null;
             JSONObject eachDay = null;
             DayData dayData;
@@ -116,6 +120,8 @@ public class StockDetailedViewModel extends ViewModel {
                 key = keysIterator.next();
                 eachDay = timeSeriesDaily.getJSONObject(key);
                 dayData = new DayData(DAY + dayNo);
+                date = simpleDateFormat.parse(key);
+                dayData.setDate(date);
                 dayData.setDayHigh(eachDay.getDouble("2. high"));
                 dayData.setDayLow(eachDay.getDouble("3. low"));
                 dayData.setOpen(eachDay.getDouble("1. open"));

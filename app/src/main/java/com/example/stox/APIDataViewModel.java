@@ -26,7 +26,7 @@ public class APIDataViewModel extends ViewModel {
     private static final String TAG = "APIViewModel";
     private static final String API_KEY = "5LDENZCGIC5UU3VX";
     private static final String BASE_URL = "https://www.alphavantage.co/query?";
-    private static MutableLiveData<Set<Stock>> stocks;
+    public static MutableLiveData<Set<Stock>> stocks;
     @SuppressLint("StaticFieldLeak")
     private Context context;
     public void addStockName(Stock newStock) {
@@ -36,21 +36,21 @@ public class APIDataViewModel extends ViewModel {
         Log.d(TAG, "New stock added = " + newStock);
         stocks.setValue(updatedStocks);
     }
-    public LiveData<Set<Stock>> getStocksList(Context context) {
+    public LiveData<Set<Stock>> getStocksList(Context context, String stockSymbol) {
         if(stocks == null){
             stocks = new MutableLiveData<>();
             stocks.setValue(new LinkedHashSet<>());
         }
         this.context = context;
-        retrieveDataFromAPI();
+        retrieveDataFromAPI(stockSymbol);
         return stocks;
     }
 
-    private void retrieveDataFromAPI() {
+    private void retrieveDataFromAPI(String stockSymbol) {
         AlphaVantageAPICall alphaVantageAPICall = new AlphaVantageAPICall(BASE_URL, API_KEY);
         List<String> params = new ArrayList<>();
         params.add("function=GLOBAL_QUOTE");
-        params.add("symbol=ITC.BSE");
+        params.add("symbol=" + stockSymbol);
         alphaVantageAPICall.setParams(params);
         RequestQueue queue = Volley.newRequestQueue(this.context);
         String finalURL = alphaVantageAPICall.getURL();

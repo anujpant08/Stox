@@ -10,7 +10,7 @@
 
     <TextView
         android:id="@+id/stock_code"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/open_sans_bold"
         android:text="Stock"
@@ -28,6 +28,15 @@
         android:textColor="#F4F4F4"
         android:textSize="16sp"
         android:layout_below="@id/stock_code"/>
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:id="@+id/fav_icon"
+        android:contentDescription="Add to favorites"
+        android:src="@drawable/ic_round_favorite_border_24"
+        android:layout_alignParentEnd="true">
+
+    </ImageView>
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chip_group"

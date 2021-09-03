@@ -11,15 +11,15 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/open_sans_bold"
         android:text="Date"
+        android:layout_alignParentTop="true"
         android:textColor="@color/primary_color"
         android:textSize="16sp">
 
     </TextView>
-
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_layout_daily"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/constraint_layout_daily"
         android:layout_below="@id/date_text"
         android:layout_marginTop="8dp">
 
@@ -29,18 +29,17 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="20dp"
             android:padding="8dp"
+            app:layout_constraintHorizontal_weight="1"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/relative_layout_right"
-            app:layout_constraintHorizontal_weight="1">
+            app:layout_constraintRight_toLeftOf="@id/relative_layout_right">
 
             <TextView
+                android:id="@+id/day_open_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/day_open_text"
                 android:text="Open"
                 android:textColor="@color/white"
-                android:textSize="16sp">
-            </TextView>
+                android:textSize="16sp"></TextView>
 
             <TextView
                 android:id="@+id/day_open_value"
@@ -71,12 +70,13 @@
                 android:text="123.00"
                 android:textColor="#97DD97"
                 android:textSize="16sp" />
+
             <TextView
                 android:id="@+id/volume_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/day_high_text"
-                android:text="Volume"
+                android:text="Vol"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
@@ -97,18 +97,17 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:padding="8dp"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintHorizontal_weight="1"
             app:layout_constraintLeft_toRightOf="@id/relative_layout_left"
-            app:layout_constraintHorizontal_weight="1">
+            app:layout_constraintRight_toRightOf="parent">
 
             <TextView
+                android:id="@+id/day_close_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/day_close_text"
                 android:text="Close"
                 android:textColor="@color/white"
-                android:textSize="16sp">
-            </TextView>
+                android:textSize="16sp"></TextView>
 
             <TextView
                 android:id="@+id/day_close_value"
@@ -119,6 +118,7 @@
                 android:text="345.00"
                 android:textColor="#97DD97"
                 android:textSize="16sp" />
+
             <TextView
                 android:id="@+id/day_low_text"
                 android:layout_width="wrap_content"
