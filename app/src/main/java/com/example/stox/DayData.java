@@ -2,6 +2,8 @@ package com.example.stox;
 
 import androidx.annotation.NonNull;
 
+import java.util.Date;
+
 public class DayData {
     String dayName = "";
     Double open = 0.0;
@@ -9,6 +11,7 @@ public class DayData {
     Double dayHigh = 0.0;
     Double dayLow = 0.0;
     Double volume = null;
+    Date date = null;
 
     public DayData(String dayName) {
         this.dayName = dayName;
@@ -58,6 +61,14 @@ public class DayData {
         return dayName;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
     @NonNull
     @Override
     public String toString() {
@@ -68,6 +79,7 @@ public class DayData {
                 ", dayHigh=" + dayHigh +
                 ", dayLow=" + dayLow +
                 ", volume=" + volume +
+                ", date=" + date +
                 '}';
     }
 }

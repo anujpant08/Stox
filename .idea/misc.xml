@@ -7,6 +7,8 @@
         <entry key="../../Library/Android/sdk/platforms/android-31/data/res/layout/simple_list_item_2.xml" value="0.20199275362318841" />
         <entry key="app/src/main/res/drawable/custom_search_bar_background.xml" value="0.2557291666666667" />
         <entry key="app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.2557291666666667" />
+        <entry key="app/src/main/res/drawable/ic_round_favorite_border_12.xml" value="0.103125" />
+        <entry key="app/src/main/res/drawable/ic_round_favorite_border_24.xml" value="0.20364583333333333" />
         <entry key="app/src/main/res/layout/activity_home_page_main.xml" value="0.18432971014492755" />
         <entry key="app/src/main/res/layout/activity_homepage_tabbed.xml" value="0.23369565217391305" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />

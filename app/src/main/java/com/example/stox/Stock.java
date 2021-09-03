@@ -17,6 +17,7 @@ public class Stock {
     DayData dayData3;
     DayData dayData4;
     DayData dayData5;
+    boolean isFav = false;
 
     public String getStockSymbol() {
         return stockSymbol;
@@ -114,6 +115,14 @@ public class Stock {
         this.dayData5 = dayData5;
     }
 
+    public boolean isFav() {
+        return isFav;
+    }
+
+    public void setFav(boolean fav) {
+        isFav = fav;
+    }
+
     @Override
     public boolean equals(Object stockObject) {
         if (this == stockObject) return true;
@@ -143,6 +152,7 @@ public class Stock {
                 ", dayData3=" + dayData3 +
                 ", dayData4=" + dayData4 +
                 ", dayData5=" + dayData5 +
+                ", isFav=" + isFav +
                 '}';
     }
 }

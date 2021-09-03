@@ -67,6 +67,7 @@ public class SearchAPIViewModel extends ViewModel {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "exception occurred: ", error);
+                error.printStackTrace();
             }
         });
         stringRequest.setTag(TAG);

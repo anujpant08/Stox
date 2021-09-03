@@ -34,6 +34,7 @@ public class StocksFragment extends Fragment {
     private Set<Stock> stockSet;
     private RequestQueue queue;
     private StockCustomAdapter arrayAdapter;
+    private SharedPreferences sharedPreferences;
 
     @Override
     public View onCreateView(
@@ -49,7 +50,7 @@ public class StocksFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         stockSet = new LinkedHashSet<>();
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("Stocks", Context.MODE_PRIVATE);
+        sharedPreferences = requireActivity().getSharedPreferences("Stocks", Context.MODE_PRIVATE);
         @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = sharedPreferences.edit();
         String savedJSON = sharedPreferences.getString("Stocks", "Empty Stock");
         Type type = new TypeToken<List<Stock>>(){}.getType();
@@ -70,8 +71,8 @@ public class StocksFragment extends Fragment {
         //callAPIService(editor, apiDataViewModel);
     }
 
-    private void callAPIService(SharedPreferences.Editor editor, APIDataViewModel apiDataViewModel) {
-        apiDataViewModel.getStocksList(getActivity()).observe(getViewLifecycleOwner(), new Observer<Set<Stock>>() {
+    private void callAPIService(SharedPreferences.Editor editor, APIDataViewModel apiDataViewModel, String stockSymbol) {
+        apiDataViewModel.getStocksList(getActivity(), stockSymbol).observe(getViewLifecycleOwner(), new Observer<Set<Stock>>() {
             @Override
             public void onChanged(Set<Stock> updatedStocks) {
                 Log.d(TAG, "final list : " + updatedStocks);
@@ -85,6 +86,24 @@ public class StocksFragment extends Fragment {
                 arrayAdapter.addAll(stockSet);
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e(TAG, "Stock fragment resumed!");
+        stockSet.clear();
+        sharedPreferences = requireActivity().getSharedPreferences("Stocks", Context.MODE_PRIVATE);
+        String savedJSON = sharedPreferences.getString("Stocks", "Empty Stock");
+        Type type = new TypeToken<List<Stock>>(){}.getType();
+        Gson gson = new Gson();
+        Log.d(TAG, "data saved in shared prefs: " + savedJSON);
+        if(savedJSON != null && !Objects.equals(savedJSON, "Empty Stock")){
+            stockSet.addAll(gson.fromJson(savedJSON, type));
+        }
+        arrayAdapter.clear();
+        arrayAdapter.addAll(stockSet);
+        arrayAdapter.notifyDataSetChanged();
     }
 
     @Override
