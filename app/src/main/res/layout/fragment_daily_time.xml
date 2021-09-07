@@ -3,15 +3,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/black"
     android:padding="8dp"
     tools:context=".DailyTimeFragment">
 
-    <ListView
+    <com.facebook.shimmer.ShimmerFrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/stock_detailed_listview">
+        android:id="@+id/shimmer_daily"
+        app:shimmer_auto_start="false"
+        app:shimmer_width_ratio="1"
+        app:shimmer_height_ratio="1">
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/stock_detailed_listview"
+            android:layout_marginTop="8dp">
 
-    </ListView>
+        </ListView>
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
 </RelativeLayout>

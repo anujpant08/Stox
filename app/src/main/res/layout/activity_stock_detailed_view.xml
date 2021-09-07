@@ -23,11 +23,12 @@
         android:id="@+id/stock_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/stock_code"
         android:fontFamily="@font/open_sans"
         android:text="Stock Name"
         android:textColor="#F4F4F4"
-        android:textSize="16sp"
-        android:layout_below="@id/stock_code"/>
+        android:textSize="16sp" />
+
     <ImageView
         android:layout_width="24dp"
         android:layout_height="24dp"
@@ -50,7 +51,7 @@
         <com.google.android.material.chip.Chip
             android:id="@+id/daily_chip"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:checkable="true"
             android:checked="true"
             android:fontFamily="@font/open_sans"
@@ -65,9 +66,8 @@
         <com.google.android.material.chip.Chip
             android:id="@+id/weekly_chip"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:checkable="true"
-            android:checked="true"
             android:fontFamily="@font/open_sans"
             android:text="Weekly"
             android:textAlignment="center"
@@ -81,7 +81,7 @@
         <com.google.android.material.chip.Chip
             android:id="@+id/monthly_chip"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:checkable="true"
             android:fontFamily="@font/open_sans"
             android:text="Monthly"

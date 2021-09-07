@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.chip.Chip;
@@ -32,6 +31,9 @@ import java.util.Set;
 
 public class StockDetailedViewActivity extends AppCompatActivity {
     private static final String TAG = "StockDetailActivity";
+    private ViewPager2 timeViewPager;
+    private TimeDurationFragmentAdapter timeDurationFragmentAdapter;
+    private static CallToFragmentInterface callToFragmentInterface;
 
     @SuppressLint("UseCompatLoadingForDrawables")
     @Override
@@ -64,7 +66,6 @@ public class StockDetailedViewActivity extends AppCompatActivity {
             isFilledIcon[0] = true;
             favIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_round_favorite_filled_24));
         }
-        APIDataViewModel apiDataViewModel = new ViewModelProvider(this).get(APIDataViewModel.class);
         Animation scaleDown = AnimationUtils.loadAnimation(this, R.anim.scale_down);
         Animation scaleUp = AnimationUtils.loadAnimation(this, R.anim.scale_up);
         Set<Stock> finalSavedStocks = new HashSet<>(savedStocks);
@@ -119,11 +120,13 @@ public class StockDetailedViewActivity extends AppCompatActivity {
             }
         });
         FragmentManager fragmentManager = getSupportFragmentManager();
-        TimeDurationFragmentAdapter timeDurationFragmentAdapter = new TimeDurationFragmentAdapter(fragmentManager, getLifecycle());
-        ViewPager2 timeViewPager = findViewById(R.id.time_viewpager2);
+        timeDurationFragmentAdapter = new TimeDurationFragmentAdapter(fragmentManager, getLifecycle());
+        timeViewPager = findViewById(R.id.time_viewpager2);
         timeViewPager.setAdapter(timeDurationFragmentAdapter);
 
         DailyTimeFragment.setStock(stock);
+        WeeklyTimeFragment.setStock(stock);
+        MonthlyTimeFragment.setStock(stock);
 
         ChipGroup chipGroup = findViewById(R.id.chip_group);
         Chip dailyChip = findViewById(R.id.daily_chip);
@@ -140,30 +143,43 @@ public class StockDetailedViewActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(ChipGroup group, int checkedId) {
                 Chip chip = findViewById(checkedId);
-                if(chip != null){
+                if (chip != null) {
                     Chip uncheckChip = null;
-                    for(Integer chipID : chipIds){
-                        if(chipID != checkedId){
+                    for (Integer chipID : chipIds) {
+                        if (chipID != checkedId) {
                             uncheckChip = findViewById(chipID);
                             uncheckChip.setChipBackgroundColorResource(R.color.white);
                         }
                     }
                     chip.setChipBackgroundColorResource(R.color.primary_color);
-                    if(chip.getText().equals("Daily")){
+                    if (chip.getText().equals("Daily")) {
                         //daily fragment
                         Log.d(TAG, "Clicked on checkedId: " + chip.getText());
-                        timeViewPager.setCurrentItem(0, true);
-                    }else if(chip.getText().equals("Weekly")){
+                        timeViewPager.setCurrentItem(0, false);
+                    } else if (chip.getText().equals("Weekly")) {
                         //weekly fragment
                         Log.d(TAG, "Clicked on checkedId: " + chip.getText());
-                        timeViewPager.setCurrentItem(1, true);
-                    }else{
+                        timeViewPager.setCurrentItem(1, false);
+                        Log.e(TAG, "Week current: " + timeViewPager.getCurrentItem());
+                    } else {
                         //monthly fragment
                         Log.d(TAG, "Clicked on checkedId: " + chip.getText());
-                        timeViewPager.setCurrentItem(2, true);
+                        timeViewPager.setCurrentItem(2, false);
+                        Log.e(TAG, "Month current: " + timeViewPager.getCurrentItem());
                     }
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(callToFragmentInterface != null){
+            callToFragmentInterface.clearData();
+        }
+        super.onBackPressed();
+    }
+    public static void setListenerToInterface(CallToFragmentInterface toFragmentInterface){
+        callToFragmentInterface = toFragmentInterface;
     }
 }

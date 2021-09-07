@@ -18,12 +18,12 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-public class StockDetailedCustomAdapter extends ArrayAdapter<String> {
+public class StockDayCustomAdapter extends ArrayAdapter<String> {
     private static final String TAG = "StockDetailedCusAdapter";
     private final int resourceID;
     private final Context context;
 
-    public StockDetailedCustomAdapter(@NonNull Context context, int resourceID, @NonNull List<String> stocksList) {
+    public StockDayCustomAdapter(@NonNull Context context, int resourceID, @NonNull List<String> stocksList) {
         super(context, resourceID, stocksList);
         this.resourceID = resourceID;
         this.context = context;
@@ -38,12 +38,12 @@ public class StockDetailedCustomAdapter extends ArrayAdapter<String> {
             LayoutInflater inflater = ((Activity)context).getLayoutInflater();
             row = inflater.inflate(resourceID, parent, false);
             viewHolder = new ViewHolder();
-            viewHolder.dateText = (TextView)row.findViewById(R.id.date_text);
+            viewHolder.dateText = (TextView)row.findViewById(R.id.day_date_text);
             viewHolder.dayOpenValue = (TextView)row.findViewById(R.id.day_open_value);
             viewHolder.dayCloseValue = (TextView)row.findViewById(R.id.day_close_value);
             viewHolder.dayHighValue = (TextView)row.findViewById(R.id.day_high_value);
             viewHolder.dayLowValue = (TextView)row.findViewById(R.id.day_low_value);
-            viewHolder.volumeValue = (TextView)row.findViewById(R.id.volume_value);
+            viewHolder.volumeValue = (TextView)row.findViewById(R.id.day_volume_value);
             row.setTag(viewHolder);
         }else{
             viewHolder = (ViewHolder) row.getTag();
@@ -52,7 +52,7 @@ public class StockDetailedCustomAdapter extends ArrayAdapter<String> {
         if(stock != null && stock.getDayData1() != null && stock.getDayData2() != null
                 && stock.getDayData3() != null && stock.getDayData4() != null && stock.getDayData5() != null ){
             Log.d(TAG, "Got stock: " + stock);
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, d MMM");
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, d MMM");
             DecimalFormat decimalFormat = new DecimalFormat("##,###.##");
             String changedDayOpenValue = null;
             String changedDayCloseValue = null;

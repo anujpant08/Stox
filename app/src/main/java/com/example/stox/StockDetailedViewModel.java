@@ -27,93 +27,63 @@ public class StockDetailedViewModel extends ViewModel {
     private static final String TAG = "StockDetailedViewModel";
     private static final String API_KEY = "5LDENZCGIC5UU3VX";
     private static final String BASE_URL = "https://www.alphavantage.co/query?";
+    public static final String MONTH = "Month";
+    public static final String WEEK = "Week";
     public static final String DAY = "Day";
     private static MutableLiveData<Stock> stocks;
     @SuppressLint("StaticFieldLeak")
     private Context context;
-    private Stock stock;
+    private static Stock stock;
     public LiveData<Stock> getStocksList(Context context, Stock stock) {
-        this.stock  = stock;
+        StockDetailedViewModel.stock = stock;
         Log.d(TAG, "Got stock in view model: " + stock);
         if(stocks == null){
             stocks = new MutableLiveData<>();
         }
-        stocks.setValue(this.stock);
         this.context = context;
         retrieveDataFromAPI();
         return stocks;
     }
+    public void setStocks(Stock stock){
+        stocks.setValue(stock);
+    }
 
     private void retrieveDataFromAPI() {
-        //globalQuoteAPICall();
         AlphaVantageAPICall alphaVantageAPICall = new AlphaVantageAPICall(BASE_URL, API_KEY);
         List<String> params = new ArrayList<>();
-        params.add("function=TIME_SERIES_DAILY");
+        params.add("function=" + stock.getRequestType());
         params.add("symbol=" + stock.getStockSymbol());
         alphaVantageAPICall.setParams(params);
         RequestQueue queue = Volley.newRequestQueue(this.context);
         String finalURL = alphaVantageAPICall.getURL();
         Log.d(TAG, "URL: " + finalURL);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, finalURL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                extractJSON(response);
-
-            }
-        }, new Response.ErrorListener() {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, finalURL, this::extractJSON, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "exception occurred: ", error);
+                Log.e(TAG, "exception occurred: " + error.getMessage());
+                stock.setResultFetched(false);
+                stocks.setValue(stock);
             }
         });
         stringRequest.setTag(TAG);
         queue.add(stringRequest);
     }
-
-//    private void globalQuoteAPICall() {
-//        AlphaVantageAPICall alphaVantageAPICall = new AlphaVantageAPICall(BASE_URL, API_KEY);
-//        List<String> params = new ArrayList<>();
-//        params.add("function=GLOBAL_QUOTE");
-//        params.add("symbol=" + stock.getStockSymbol());
-//        alphaVantageAPICall.setParams(params);
-//        RequestQueue queue = Volley.newRequestQueue(this.context);
-//        String finalURL = alphaVantageAPICall.getURL();
-//        Log.d(TAG, "URL: " + finalURL);
-//        StringRequest stringRequest = new StringRequest(Request.Method.GET, finalURL, new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//                extractJSONForGlobalQuote(response);
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Log.e(TAG, "exception occurred: ", error);
-//            }
-//        });
-//        stringRequest.setTag(TAG);
-//        queue.add(stringRequest);
-//    }
-//
-//    private void extractJSONForGlobalQuote(String response) {
-//        try{
-//            Log.e(TAG, "Response for global quote: " + response);
-//            JSONObject jsonObject = new JSONObject(response);
-//            JSONObject globalQuote = jsonObject.getJSONObject("Global Quote");
-//            stock.setChangeValue(globalQuote.getString("09. change"));
-//        }catch (Exception exception){
-//            Log.e(TAG, "An exception occurred while parsing JSON: ", exception);
-//        }
-//    }
-
     private void extractJSON(String response) {
         try {
+            if(stock.getRequestType().equals("TIME_SERIES_WEEKLY")){
+                extractWeekData(response);
+                return;
+            }else if(stock.getRequestType().equals("TIME_SERIES_MONTHLY")){
+                extractMonthData(response);
+                return;
+            }
             JSONObject jsonObject = new JSONObject(response);
             JSONObject timeSeriesDaily = jsonObject.getJSONObject("Time Series (Daily)");
             Iterator<String> keysIterator = timeSeriesDaily.keys();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = null;
-            String key = null;
-            JSONObject eachDay = null;
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date;
+            String key;
+            JSONObject eachDay;
             DayData dayData;
             int dayNo = 1;
             while(keysIterator.hasNext() && dayNo <= 5){
@@ -152,5 +122,100 @@ public class StockDetailedViewModel extends ViewModel {
             Log.e(TAG, "An exception occurred while JSON parsing: ", e);
         }
 
+    }
+
+    private void extractWeekData(String response) {
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONObject timeSeriesDaily = jsonObject.getJSONObject("Weekly Time Series");
+            Iterator<String> keysIterator = timeSeriesDaily.keys();
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date;
+            String key;
+            WeekData weekData;
+            int weekNo = 1;
+            JSONObject eachDay;
+            while (keysIterator.hasNext() && weekNo <= 5) {
+                key = keysIterator.next();
+                eachDay = timeSeriesDaily.getJSONObject(key);
+                weekData = new WeekData(WEEK + weekNo);
+                date = simpleDateFormat.parse(key);
+                weekData.setDate(date);
+                weekData.setWeekHigh(eachDay.getDouble("2. high"));
+                weekData.setWeekLow(eachDay.getDouble("3. low"));
+                weekData.setOpen(eachDay.getDouble("1. open"));
+                weekData.setClose(eachDay.getDouble("4. close"));
+                weekData.setVolume(eachDay.getDouble("5. volume"));
+                switch (WEEK + weekNo) {
+                    case "Week1":
+                        stock.setWeekData1(weekData);
+                        break;
+                    case "Week2":
+                        stock.setWeekData2(weekData);
+                        break;
+                    case "Week3":
+                        stock.setWeekData3(weekData);
+                        break;
+                    case "Week4":
+                        stock.setWeekData4(weekData);
+                        break;
+                    case "Week5":
+                        stock.setWeekData5(weekData);
+                        break;
+                }
+                Log.d(TAG, "Stock data for week" + weekNo + " is: " + weekData);
+                weekNo++;
+            }
+            stocks.setValue(stock);
+        } catch (Exception e) {
+            Log.e(TAG, "An exception occurred while JSON parsing: ", e);
+        }
+    }
+    private void extractMonthData(String response) {
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONObject timeSeriesDaily = jsonObject.getJSONObject("Monthly Time Series");
+            Iterator<String> keysIterator = timeSeriesDaily.keys();
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date date;
+            String key;
+            MonthData monthData;
+            int monthNo = 1;
+            JSONObject eachDay;
+            while (keysIterator.hasNext() && monthNo <= 5) {
+                key = keysIterator.next();
+                eachDay = timeSeriesDaily.getJSONObject(key);
+                monthData = new MonthData(MONTH + monthNo);
+                date = simpleDateFormat.parse(key);
+                monthData.setDate(date);
+                monthData.setMonthHigh(eachDay.getDouble("2. high"));
+                monthData.setMonthLow(eachDay.getDouble("3. low"));
+                monthData.setOpen(eachDay.getDouble("1. open"));
+                monthData.setClose(eachDay.getDouble("4. close"));
+                monthData.setVolume(eachDay.getDouble("5. volume"));
+                switch (MONTH + monthNo) {
+                    case "Month1":
+                        stock.setMonthData1(monthData);
+                        break;
+                    case "Month2":
+                        stock.setMonthData2(monthData);
+                        break;
+                    case "Month3":
+                        stock.setMonthData3(monthData);
+                        break;
+                    case "Month4":
+                        stock.setMonthData4(monthData);
+                        break;
+                    case "Month5":
+                        stock.setMonthData5(monthData);
+                        break;
+                }
+                Log.d(TAG, "Stock data for month" + monthNo + " is: " + monthData);
+                monthNo++;
+            }
+            stocks.setValue(stock);
+        } catch (Exception e) {
+            Log.e(TAG, "An exception occurred while JSON parsing: ", e);
+        }
     }
 }

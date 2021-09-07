@@ -91,7 +91,6 @@ public class StocksFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.e(TAG, "Stock fragment resumed!");
         stockSet.clear();
         sharedPreferences = requireActivity().getSharedPreferences("Stocks", Context.MODE_PRIVATE);
         String savedJSON = sharedPreferences.getString("Stocks", "Empty Stock");

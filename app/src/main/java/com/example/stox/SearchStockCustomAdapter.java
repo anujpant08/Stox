@@ -28,16 +28,16 @@ public class SearchStockCustomAdapter extends ArrayAdapter<Stock> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View row = convertView;
-        StockCustomAdapter.ViewHolder viewHolder = null;
+        SearchStockCustomAdapter.ViewHolder viewHolder = null;
         if(row == null){
             LayoutInflater inflater = ((Activity)context).getLayoutInflater();
             row = inflater.inflate(resourceID, parent, false);
-            viewHolder = new StockCustomAdapter.ViewHolder();
+            viewHolder = new SearchStockCustomAdapter.ViewHolder();
             viewHolder.stockSymbol = (TextView)row.findViewById(R.id.stock_symbol_search_view);
             viewHolder.stockName = (TextView)row.findViewById(R.id.stock_detail_search_view);
             row.setTag(viewHolder);
         }else{
-            viewHolder = (StockCustomAdapter.ViewHolder) row.getTag();
+            viewHolder = (SearchStockCustomAdapter.ViewHolder) row.getTag();
         }
         Stock stock = stocksList.get(position);
         viewHolder.stockSymbol.setText(stock.getStockSymbol());

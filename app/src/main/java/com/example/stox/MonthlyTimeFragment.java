@@ -1,64 +1,93 @@
 package com.example.stox;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MonthlyTimeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class MonthlyTimeFragment extends Fragment {
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.chip.Chip;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+import java.util.ArrayList;
+import java.util.List;
 
-    public MonthlyTimeFragment() {
-        // Required empty public constructor
+public class MonthlyTimeFragment extends Fragment implements CallToFragmentInterface{
+    private static Stock stock;
+    private static final String TAG = "MonthlyTimeFragment";
+    private StockMonthCustomAdapter stockMonthCustomAdapter;
+
+    public static void setStock(Stock stock) {
+        MonthlyTimeFragment.stock = stock;
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MonthlyTimeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MonthlyTimeFragment newInstance(String param1, String param2) {
-        MonthlyTimeFragment fragment = new MonthlyTimeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public static Stock getStock() {
+        return stock;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_monthly_time, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ShimmerFrameLayout shimmerFrameLayout = view.findViewById(R.id.shimmer_monthly);
+        shimmerFrameLayout.startShimmer();
+        ListView stockMonthListView = view.findViewById(R.id.stock_month_list_view);
+        List<String> months = new ArrayList<>();
+        months.add("Month1");
+        months.add("Month2");
+        months.add("Month3");
+        months.add("Month4");
+        months.add("Month5");
+        stock.setRequestType("TIME_SERIES_MONTHLY");
+        stockMonthCustomAdapter = new StockMonthCustomAdapter(
+                requireActivity(),
+                R.layout.stock_month_custom_view,
+                months
+        );
+        StockDetailedViewModel stockDetailedViewModel = new ViewModelProvider(this).get(StockDetailedViewModel.class);
+        stockDetailedViewModel.getStocksList(getActivity(), stock).observe(getViewLifecycleOwner(), new Observer<Stock>() {
+            @Override
+            public void onChanged(Stock updatedStock) {
+                if(updatedStock == null){
+                    stock = null;
+                    Log.e(TAG, "Got null stock!");
+                }else{
+                    stock = updatedStock;if(stock.getMonthData5() != null){
+                        shimmerFrameLayout.stopShimmer();
+                        shimmerFrameLayout.hideShimmer();
+                    }
+                }
+                stockMonthCustomAdapter.notifyDataSetChanged();
+            }
+        });
+        stockMonthListView.setAdapter(stockMonthCustomAdapter);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setChipsChecked();
+    }
+
+    private void setChipsChecked() {
+        Chip monthlyChip = requireActivity().findViewById(R.id.monthly_chip);
+        monthlyChip.setChecked(true);
+    }
+
+    @Override
+    public void clearData() {
+        stockMonthCustomAdapter.clear();
+        stockMonthCustomAdapter.notifyDataSetChanged();
     }
 }
