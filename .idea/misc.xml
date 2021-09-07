@@ -10,6 +10,7 @@
         <entry key="app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.2557291666666667" />
         <entry key="app/src/main/res/drawable/ic_round_favorite_border_12.xml" value="0.103125" />
         <entry key="app/src/main/res/drawable/ic_round_favorite_border_24.xml" value="0.20364583333333333" />
+        <entry key="app/src/main/res/drawable/ic_round_favorite_filled_24.xml" value="0.24635416666666668" />
         <entry key="app/src/main/res/layout/activity_home_page_main.xml" value="0.18432971014492755" />
         <entry key="app/src/main/res/layout/activity_homepage_tabbed.xml" value="0.23369565217391305" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
@@ -26,12 +27,13 @@
         <entry key="app/src/main/res/layout/fragment_tab.xml" value="0.22395833333333334" />
         <entry key="app/src/main/res/layout/fragment_weekly_time.xml" value="0.17889492753623187" />
         <entry key="app/src/main/res/layout/index_fragment.xml" value="0.22644927536231885" />
+        <entry key="app/src/main/res/layout/placeholder_textview_for_shimmer.xml" value="0.13496376811594202" />
         <entry key="app/src/main/res/layout/search_activity_layout.xml" value="0.25" />
         <entry key="app/src/main/res/layout/stock_day_custom_view.xml" value="0.23020833333333332" />
         <entry key="app/src/main/res/layout/stock_detailed_custom_view.xml" value="0.25" />
         <entry key="app/src/main/res/layout/stock_month_custom_view.xml" value="0.25" />
         <entry key="app/src/main/res/layout/stock_week_custom_view.xml" value="0.335" />
-        <entry key="app/src/main/res/layout/stocks_fragment.xml" value="0.18432971014492755" />
+        <entry key="app/src/main/res/layout/stocks_fragment.xml" value="0.21422101449275363" />
         <entry key="app/src/main/res/layout/tab_individual_fragment.xml" value="0.23369565217391305" />
         <entry key="app/src/main/res/layout/temp_fragment_month.xml" value="0.13858695652173914" />
         <entry key="app/src/main/res/layout/temp_frgament_week.xml" value="0.13858695652173914" />

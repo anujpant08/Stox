@@ -42,8 +42,8 @@
             android:drawableEnd="@drawable/ic_baseline_search_24"
             android:fontFamily="@font/open_sans_bold"
             android:hint="Search Stocks"
-            android:importantForAutofill="no"
             android:imeOptions="actionSearch"
+            android:importantForAutofill="no"
             android:inputType="textCapCharacters"
             android:padding="12dp"
             android:textColor="@color/primary_color"
@@ -56,11 +56,25 @@
         android:id="@+id/search_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/search_bar_custom"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_below="@id/search_bar_custom"
         android:background="@color/black">
-
     </ListView>
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/search_shimmer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        android:layout_below="@id/search_bar_custom"
+        app:shimmer_auto_start="false">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/placeholder_container_layout"
+            android:padding="16dp">
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
 </RelativeLayout>

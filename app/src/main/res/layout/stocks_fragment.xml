@@ -11,6 +11,33 @@
     <ListView
         android:id="@+id/stocks_list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:visibility="invisible" />
+
+    <RelativeLayout
+        android:id="@+id/no_stocks"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/broken_heart"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerInParent="true"
+            android:contentDescription="Add favorites"
+            android:background="@drawable/add"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/broken_heart"
+            android:text="No favorite stocks yet. Click here to add."
+            android:textColor="#B3B3B3"
+            android:fontFamily="@font/open_sans"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:textSize="12sp">
+
+        </TextView>
+    </RelativeLayout>
 
 </RelativeLayout>
