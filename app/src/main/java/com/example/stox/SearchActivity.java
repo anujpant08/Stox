@@ -1,15 +1,18 @@
 package com.example.stox;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -19,7 +22,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.gson.Gson;
 
 import java.util.LinkedHashSet;
@@ -32,12 +35,19 @@ public class SearchActivity extends AppCompatActivity {
     private Set<Stock> searchList;
     private SearchStockCustomAdapter arrayAdapter;
     private ListView listView;
-    private LinearProgressIndicator linearProgressIndicator;
+    private ShimmerFrameLayout shimmerFrameLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_activity_layout);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        shimmerFrameLayout = findViewById(R.id.search_shimmer);
+        LinearLayout linearLayout = findViewById(R.id.placeholder_container_layout);
+        for(int i = 1; i <= 10; i++){
+            View view = inflater.inflate(R.layout.placeholder_textview_for_shimmer, null);
+            linearLayout.addView(view);
+        }
         setupToolbar();
         handleAPICalls();
         final Stock[] listStock = {null};
@@ -66,6 +76,10 @@ public class SearchActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 boolean result = false;
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    if(shimmerFrameLayout.getVisibility() == View.INVISIBLE){
+                        shimmerFrameLayout.setVisibility(View.VISIBLE);
+                        shimmerFrameLayout.startShimmer();
+                    }
                     String value = textView.getText().toString();
                     searchList.clear();
                     if(arrayAdapter != null ){
@@ -92,9 +106,14 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onChanged(Set<Stock> updatedStocks) {
                 Log.d(TAG, "final list : " + updatedStocks);
-                searchList.clear();
-                arrayAdapter.clear();
-                arrayAdapter.addAll(updatedStocks);
+                if(updatedStocks.size() > 0){
+                    shimmerFrameLayout.stopShimmer();
+                    shimmerFrameLayout.hideShimmer();
+                    shimmerFrameLayout.setVisibility(View.INVISIBLE);
+                    searchList.clear();
+                    arrayAdapter.clear();
+                    arrayAdapter.addAll(updatedStocks);
+                }
             }
         });
     }
