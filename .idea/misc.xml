@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../layout/custom_preview.xml" value="0.12916666666666668" />
         <entry key="../../Library/Android/sdk/platforms/android-31/data/res/layout/simple_list_item_1.xml" value="0.20652173913043478" />
         <entry key="../../Library/Android/sdk/platforms/android-31/data/res/layout/simple_list_item_2.xml" value="0.20199275362318841" />
         <entry key="app/src/main/res/drawable/custom_search_bar_background.xml" value="0.2557291666666667" />
@@ -12,11 +13,11 @@
         <entry key="app/src/main/res/layout/activity_home_page_main.xml" value="0.18432971014492755" />
         <entry key="app/src/main/res/layout/activity_homepage_tabbed.xml" value="0.23369565217391305" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/activity_stock_detailed_view.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_stock_detailed_view.xml" value="0.5" />
         <entry key="app/src/main/res/layout/content_home_page_main.xml" value="0.22644927536231885" />
         <entry key="app/src/main/res/layout/custom_search_stock_layout.xml" value="0.335" />
         <entry key="app/src/main/res/layout/custom_stock_text_view.xml" value="0.16757246376811594" />
-        <entry key="app/src/main/res/layout/fragment_daily_time.xml" value="0.17889492753623187" />
+        <entry key="app/src/main/res/layout/fragment_daily_time.xml" value="0.21422101449275363" />
         <entry key="app/src/main/res/layout/fragment_first.xml" value="0.18432971014492755" />
         <entry key="app/src/main/res/layout/fragment_homepage_tabbed.xml" value="0.23369565217391305" />
         <entry key="app/src/main/res/layout/fragment_main.xml" value="0.25" />
@@ -26,9 +27,14 @@
         <entry key="app/src/main/res/layout/fragment_weekly_time.xml" value="0.17889492753623187" />
         <entry key="app/src/main/res/layout/index_fragment.xml" value="0.22644927536231885" />
         <entry key="app/src/main/res/layout/search_activity_layout.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/stock_day_custom_view.xml" value="0.23020833333333332" />
         <entry key="app/src/main/res/layout/stock_detailed_custom_view.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/stock_month_custom_view.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/stock_week_custom_view.xml" value="0.335" />
         <entry key="app/src/main/res/layout/stocks_fragment.xml" value="0.18432971014492755" />
         <entry key="app/src/main/res/layout/tab_individual_fragment.xml" value="0.23369565217391305" />
+        <entry key="app/src/main/res/layout/temp_fragment_month.xml" value="0.13858695652173914" />
+        <entry key="app/src/main/res/layout/temp_frgament_week.xml" value="0.13858695652173914" />
         <entry key="app/src/main/res/menu-v26/menu_items.xml" value="0.23802083333333332" />
         <entry key="app/src/main/res/menu/homepage_menu_items.xml" value="0.23958333333333334" />
         <entry key="app/src/main/res/menu/menu_items.xml" value="0.23802083333333332" />

@@ -19,6 +19,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.gson.Gson;
 
 import java.util.LinkedHashSet;
@@ -31,6 +32,7 @@ public class SearchActivity extends AppCompatActivity {
     private Set<Stock> searchList;
     private SearchStockCustomAdapter arrayAdapter;
     private ListView listView;
+    private LinearProgressIndicator linearProgressIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

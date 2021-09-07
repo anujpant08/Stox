@@ -3,24 +3,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/black">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/black"
+    tools:context=".MonthlyTimeFragment">
 
     <TextView
-        android:id="@+id/date_text"
+        android:id="@+id/month_date_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:fontFamily="@font/open_sans_bold"
         android:text="Date"
-        android:layout_alignParentTop="true"
         android:textColor="@color/primary_color"
         android:textSize="16sp">
 
     </TextView>
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraint_layout_daily"
+        android:id="@+id/constraint_layout_monthly"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/date_text"
+        android:layout_below="@id/month_date_text"
         android:layout_marginTop="8dp">
 
         <RelativeLayout
@@ -34,60 +36,60 @@
             app:layout_constraintRight_toLeftOf="@id/relative_layout_right">
 
             <TextView
-                android:id="@+id/day_open_text"
+                android:id="@+id/month_open_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Open"
                 android:textColor="@color/white"
-                android:textSize="16sp"></TextView>
+                android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/day_open_value"
+                android:id="@+id/month_open_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:gravity="end"
-                android:text="123.00"
+                android:text="Price"
                 android:textColor="#97DD97"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/day_high_text"
+                android:id="@+id/month_high_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/day_open_text"
-                android:text="Day High"
+                android:layout_below="@id/month_open_text"
+                android:text="Mth. High"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/day_high_value"
+                android:id="@+id/month_high_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/day_open_text"
+                android:layout_below="@id/month_open_text"
                 android:layout_alignParentEnd="true"
                 android:gravity="end"
-                android:text="123.00"
+                android:text="Price"
                 android:textColor="#97DD97"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/volume_text"
+                android:id="@+id/month_volume_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/day_high_text"
+                android:layout_below="@id/month_high_text"
                 android:text="Vol"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/volume_value"
+                android:id="@+id/month_volume_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/day_high_text"
+                android:layout_below="@id/month_high_text"
                 android:layout_alignParentEnd="true"
                 android:gravity="end"
-                android:text="2.3m"
+                android:text="Vol"
                 android:textColor="@color/primary_color"
                 android:textSize="16sp" />
         </RelativeLayout>
@@ -102,40 +104,40 @@
             app:layout_constraintRight_toRightOf="parent">
 
             <TextView
-                android:id="@+id/day_close_text"
+                android:id="@+id/month_close_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Close"
                 android:textColor="@color/white"
-                android:textSize="16sp"></TextView>
+                android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/day_close_value"
+                android:id="@+id/month_close_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:gravity="end"
-                android:text="345.00"
+                android:text="Price"
                 android:textColor="#97DD97"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/day_low_text"
+                android:id="@+id/month_low_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/day_close_text"
-                android:text="Day Low"
+                android:layout_below="@id/month_close_text"
+                android:text="Mth. Low"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/day_low_value"
+                android:id="@+id/month_low_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/day_close_text"
+                android:layout_below="@id/month_close_text"
                 android:layout_alignParentEnd="true"
                 android:gravity="end"
-                android:text="123.00"
+                android:text="Price"
                 android:textColor="#97DD97"
                 android:textSize="16sp" />
         </RelativeLayout>
