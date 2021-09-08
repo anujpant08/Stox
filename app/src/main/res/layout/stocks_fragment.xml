@@ -11,13 +11,13 @@
     <ListView
         android:id="@+id/stocks_list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="invisible" />
+        android:layout_height="match_parent" />
 
     <RelativeLayout
         android:id="@+id/no_stocks"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="invisible">
 
         <ImageButton
             android:id="@+id/broken_heart"

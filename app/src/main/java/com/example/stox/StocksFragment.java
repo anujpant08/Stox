@@ -2,12 +2,14 @@ package com.example.stox;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -68,22 +70,36 @@ public class StocksFragment extends Fragment {
         listView.setAdapter(arrayAdapter);
         arrayAdapter.addAll(stockSet);
         APIDataViewModel apiDataViewModel = new ViewModelProvider(this).get(APIDataViewModel.class);
-        //callAPIService(editor, apiDataViewModel);
+        for(Stock stock : stockSet){
+            callAPIService(editor, apiDataViewModel, stock.getStockSymbol());
+        }
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Stock clickedStock = (Stock)listView.getItemAtPosition(position);
+                Intent intent = new Intent(requireActivity(), StockDetailedViewActivity.class);
+                Gson gson = new Gson();
+                String jsonStockObject = gson.toJson(clickedStock);
+                intent.putExtra("Stock", jsonStockObject);
+                startActivity(intent);
+            }
+        });
     }
 
     private void callAPIService(SharedPreferences.Editor editor, APIDataViewModel apiDataViewModel, String stockSymbol) {
-        apiDataViewModel.getStocksList(getActivity(), stockSymbol).observe(getViewLifecycleOwner(), new Observer<Set<Stock>>() {
+        apiDataViewModel.getStocksList(getActivity(), stockSymbol, stockSet).observe(getViewLifecycleOwner(), new Observer<Set<Stock>>() {
             @Override
             public void onChanged(Set<Stock> updatedStocks) {
                 Log.d(TAG, "final list : " + updatedStocks);
                 Gson gson = new Gson();
-                stockSet.addAll(updatedStocks);
+                stockSet = updatedStocks;
                 String updatedJSON = gson.toJson(stockSet);
                 Log.d(TAG, "updated JSON: " + updatedJSON);
                 editor.putString("Stocks", updatedJSON);
                 editor.apply();
                 arrayAdapter.clear();
                 arrayAdapter.addAll(stockSet);
+                arrayAdapter.notifyDataSetChanged();
             }
         });
     }

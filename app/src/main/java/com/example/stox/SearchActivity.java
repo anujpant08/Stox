@@ -108,7 +108,6 @@ public class SearchActivity extends AppCompatActivity {
                 Log.d(TAG, "final list : " + updatedStocks);
                 if(updatedStocks.size() > 0){
                     shimmerFrameLayout.stopShimmer();
-                    shimmerFrameLayout.hideShimmer();
                     shimmerFrameLayout.setVisibility(View.INVISIBLE);
                     searchList.clear();
                     arrayAdapter.clear();

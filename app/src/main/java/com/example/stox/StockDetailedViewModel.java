@@ -17,6 +17,7 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -81,6 +82,7 @@ public class StockDetailedViewModel extends ViewModel {
             JSONObject timeSeriesDaily = jsonObject.getJSONObject("Time Series (Daily)");
             Iterator<String> keysIterator = timeSeriesDaily.keys();
             @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            DecimalFormat decimalFormat = new DecimalFormat("##,###.##");
             Date date;
             String key;
             JSONObject eachDay;
@@ -100,9 +102,11 @@ public class StockDetailedViewModel extends ViewModel {
                 switch(DAY + dayNo){
                     case "Day1":
                         stock.setDayData1(dayData);
+                        stock.setLastTradePrice(dayData.getClose());
                         break;
                     case  "Day2":
                         stock.setDayData2(dayData);
+                        stock.setChangeValue(stock.getDayData1().getClose() - stock.getDayData2().getClose());
                         break;
                     case "Day3":
                         stock.setDayData3(dayData);

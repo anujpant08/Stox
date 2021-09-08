@@ -18,7 +18,6 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -27,6 +26,7 @@ public class APIDataViewModel extends ViewModel {
     private static final String API_KEY = "5LDENZCGIC5UU3VX";
     private static final String BASE_URL = "https://www.alphavantage.co/query?";
     public static MutableLiveData<Set<Stock>> stocks;
+    private Set<Stock> favStocks;
     @SuppressLint("StaticFieldLeak")
     private Context context;
     public void addStockName(Stock newStock) {
@@ -36,10 +36,11 @@ public class APIDataViewModel extends ViewModel {
         Log.d(TAG, "New stock added = " + newStock);
         stocks.setValue(updatedStocks);
     }
-    public LiveData<Set<Stock>> getStocksList(Context context, String stockSymbol) {
+    public LiveData<Set<Stock>> getStocksList(Context context, String stockSymbol, Set<Stock> favStocks) {
+        this.favStocks = favStocks;
         if(stocks == null){
             stocks = new MutableLiveData<>();
-            stocks.setValue(new LinkedHashSet<>());
+            stocks.setValue(favStocks);
         }
         this.context = context;
         retrieveDataFromAPI(stockSymbol);
@@ -65,6 +66,14 @@ public class APIDataViewModel extends ViewModel {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "exception occurred: ", error);
+                Stock updateFavStock = null;
+                for(Stock stock : favStocks){
+                    if(stock.getStockSymbol().equals(stockSymbol)){
+                        updateFavStock = stock;
+                        break;
+                    }
+                }
+                addStockName(updateFavStock);
             }
         });
         stringRequest.setTag(TAG);
@@ -76,12 +85,18 @@ public class APIDataViewModel extends ViewModel {
             JSONObject jsonObject = new JSONObject(response);
             JSONObject globalQuote = jsonObject.getJSONObject("Global Quote");
             //String lastRefreshed = metaData.getString("3. Last Refreshed");
-
-            Stock stock = new Stock();
-            stock.setStockSymbol(globalQuote.getString("01. symbol"));
-            stock.setLastTradePrice(globalQuote.getDouble("05. price"));
-            stock.setChangeValue(globalQuote.getString("09. change"));
-            addStockName(stock);
+            Stock updateFavStock = null;
+            for(Stock stock : favStocks){
+                if(stock.getStockSymbol().equals(globalQuote.getString("01. symbol"))){
+                    updateFavStock = stock;
+                    break;
+                }
+            }
+            assert updateFavStock != null;
+            updateFavStock.setStockSymbol(globalQuote.getString("01. symbol"));
+            updateFavStock.setLastTradePrice(globalQuote.getDouble("05. price"));
+            updateFavStock.setChangeValue(globalQuote.getDouble("09. change"));
+            addStockName(updateFavStock);
         }catch (Exception exception){
             Log.e(TAG, "An exception occurred while parsing JSON: ", exception);
         }

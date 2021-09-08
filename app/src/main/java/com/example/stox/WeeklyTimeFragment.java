@@ -23,6 +23,7 @@ public class WeeklyTimeFragment extends Fragment implements CallToFragmentInterf
     private static Stock stock;
     private static final String TAG = "WeeklyTimeFragment";
     private StockWeekCustomAdapter stockWeekCustomAdapter;
+    private ShimmerFrameLayout shimmerFrameLayout;
 
     public static void setStock(Stock stock) {
         WeeklyTimeFragment.stock = stock;
@@ -40,7 +41,7 @@ public class WeeklyTimeFragment extends Fragment implements CallToFragmentInterf
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ShimmerFrameLayout shimmerFrameLayout = view.findViewById(R.id.shimmer_weekly);
+        shimmerFrameLayout = view.findViewById(R.id.shimmer_weekly);
         shimmerFrameLayout.startShimmer();
         ListView stockWeekListView = view.findViewById(R.id.stock_week_list_view);
         List<String> weeks = new ArrayList<>();
@@ -79,6 +80,10 @@ public class WeeklyTimeFragment extends Fragment implements CallToFragmentInterf
     public void onResume() {
         super.onResume();
         setChipsChecked();
+        if(!shimmerFrameLayout.isShimmerStarted() || !shimmerFrameLayout.isShimmerVisible()){
+            shimmerFrameLayout.setVisibility(View.VISIBLE);
+            shimmerFrameLayout.startShimmer();
+        }
     }
 
     private void setChipsChecked() {

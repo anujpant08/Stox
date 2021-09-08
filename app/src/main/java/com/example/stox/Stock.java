@@ -11,7 +11,7 @@ public class Stock {
     Double closePrice = 0.00;
     Double matchPercentage = 0.00;
     Double lastTradePrice = 0.00;
-    String changeValue = "";
+    Double changeValue = 0.00;
     DayData dayData1;
     DayData dayData2;
     DayData dayData3;
@@ -75,11 +75,11 @@ public class Stock {
         this.lastTradePrice = lastTradePrice;
     }
 
-    public String getChangeValue() {
+    public Double getChangeValue() {
         return changeValue;
     }
 
-    public void setChangeValue(String changeValue) {
+    public void setChangeValue(Double changeValue) {
         this.changeValue = changeValue;
     }
 
