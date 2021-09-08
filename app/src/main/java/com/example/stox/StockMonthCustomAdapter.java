@@ -109,7 +109,7 @@ public class StockMonthCustomAdapter extends ArrayAdapter<String> {
             viewHolder.volumeValue.setText(volumeValue);
             viewHolder.dateText.setText(dateFormatted);
             assert changedMonthOpenValue != null;
-            if(stock.getChangeValue().startsWith("-")){
+            if(stock.getChangeValue() < 0.0){
                 viewHolder.monthOpenValue.setTextColor(Color.parseColor("#ED7373"));
                 viewHolder.monthCloseValue.setTextColor(Color.parseColor("#ED7373"));
                 viewHolder.monthHighValue.setTextColor(Color.parseColor("#ED7373"));

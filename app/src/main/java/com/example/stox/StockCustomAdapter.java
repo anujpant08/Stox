@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class StockCustomAdapter extends ArrayAdapter<Stock> {
@@ -30,6 +31,7 @@ public class StockCustomAdapter extends ArrayAdapter<Stock> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View row = convertView;
         ViewHolder viewHolder = null;
+        DecimalFormat decimalFormat = new DecimalFormat("##,###.##");
         if(row == null){
             LayoutInflater inflater = ((Activity)context).getLayoutInflater();
             row = inflater.inflate(resourceID, parent, false);
@@ -45,12 +47,14 @@ public class StockCustomAdapter extends ArrayAdapter<Stock> {
         Stock stock = stocksList.get(position);
         viewHolder.stockSymbol.setText(stock.getStockSymbol());
         viewHolder.stockName.setText(stock.getStockName());
-        viewHolder.lastTradePrice.setText(String.valueOf(stock.getLastTradePrice()));
-        String changedValue = stock.getChangeValue();
+        viewHolder.lastTradePrice.setText(decimalFormat.format(stock.getLastTradePrice()));
+        String changedValue = decimalFormat.format(stock.getChangeValue());
         viewHolder.changeValue.setText(changedValue);
         if(changedValue.startsWith("-")){
             viewHolder.changeValue.setTextColor(Color.parseColor("#ED7373"));
             viewHolder.lastTradePrice.setTextColor(Color.parseColor("#ED7373"));
+        }else{
+            viewHolder.changeValue.setText("+" + changedValue);
         }
         return row;
     }

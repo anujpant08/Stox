@@ -109,7 +109,7 @@ public class StockWeekCustomAdapter extends ArrayAdapter<String> {
             viewHolder.volumeValue.setText(volumeValue);
             viewHolder.dateText.setText(dateFormatted);
             assert changedWeekOpenValue != null;
-            if(stock.getChangeValue().startsWith("-")){
+            if(stock.getChangeValue() < 0.0){
                 viewHolder.weekOpenValue.setTextColor(Color.parseColor("#ED7373"));
                 viewHolder.weekCloseValue.setTextColor(Color.parseColor("#ED7373"));
                 viewHolder.weekHighValue.setTextColor(Color.parseColor("#ED7373"));

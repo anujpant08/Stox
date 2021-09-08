@@ -97,6 +97,10 @@ public class DailyTimeFragment extends Fragment implements CallToFragmentInterfa
     public void onResume() {
         super.onResume();
         setChipsChecked();
+        if(!shimmerFrameLayout.isShimmerStarted() || !shimmerFrameLayout.isShimmerVisible()){
+            shimmerFrameLayout.setVisibility(View.VISIBLE);
+            shimmerFrameLayout.startShimmer();
+        }
     }
 
     private void setChipsChecked() {

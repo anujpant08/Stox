@@ -23,6 +23,7 @@ public class MonthlyTimeFragment extends Fragment implements CallToFragmentInter
     private static Stock stock;
     private static final String TAG = "MonthlyTimeFragment";
     private StockMonthCustomAdapter stockMonthCustomAdapter;
+    private ShimmerFrameLayout shimmerFrameLayout;
 
     public static void setStock(Stock stock) {
         MonthlyTimeFragment.stock = stock;
@@ -40,7 +41,7 @@ public class MonthlyTimeFragment extends Fragment implements CallToFragmentInter
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ShimmerFrameLayout shimmerFrameLayout = view.findViewById(R.id.shimmer_monthly);
+        shimmerFrameLayout = view.findViewById(R.id.shimmer_monthly);
         shimmerFrameLayout.startShimmer();
         ListView stockMonthListView = view.findViewById(R.id.stock_month_list_view);
         List<String> months = new ArrayList<>();
@@ -78,6 +79,10 @@ public class MonthlyTimeFragment extends Fragment implements CallToFragmentInter
     public void onResume() {
         super.onResume();
         setChipsChecked();
+        if(!shimmerFrameLayout.isShimmerStarted() || !shimmerFrameLayout.isShimmerVisible()){
+            shimmerFrameLayout.setVisibility(View.VISIBLE);
+            shimmerFrameLayout.startShimmer();
+        }
     }
 
     private void setChipsChecked() {

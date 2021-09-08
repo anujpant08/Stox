@@ -109,7 +109,7 @@ public class StockDayCustomAdapter extends ArrayAdapter<String> {
             viewHolder.volumeValue.setText(volumeValue);
             viewHolder.dateText.setText(dateFormatted);
             assert changedDayOpenValue != null;
-            if(stock.getChangeValue().startsWith("-")){
+            if(stock.getChangeValue() < 0.0){
                 viewHolder.dayOpenValue.setTextColor(Color.parseColor("#ED7373"));
                 viewHolder.dayCloseValue.setTextColor(Color.parseColor("#ED7373"));
                 viewHolder.dayHighValue.setTextColor(Color.parseColor("#ED7373"));
