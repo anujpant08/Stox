@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,20 +63,26 @@ public class DailyTimeFragment extends Fragment implements CallToFragmentInterfa
                 R.layout.stock_day_custom_view,
                 days
         );
+        callAPIService(view);
+        stockDetailedListView.setAdapter(stockDayCustomAdapter);
+    }
+
+    private void callAPIService(@NonNull View parentView) {
         stockDetailedViewModel = new ViewModelProvider(this).get(StockDetailedViewModel.class);
         stockDetailedViewModel.getStocksList(getActivity(), stock).observe(getViewLifecycleOwner(), new Observer<Stock>() {
             @Override
             public void onChanged(Stock updatedStock) {
                 if(updatedStock == null){
-                    stock = null;
+                    //stock = null;
                     Log.e(TAG, "Got null stock!");
                 }
                 else {
-                    Log.e(TAG, "results fetched: " + updatedStock.isResultFetched());
                     if (!updatedStock.isResultFetched()) {
                         Log.e(TAG, "Network error");
                         shimmerFrameLayout.stopShimmer();
                         shimmerFrameLayout.hideShimmer();
+                        Snackbar snackbar = Snackbar.make(parentView,"Network error.", Snackbar.LENGTH_SHORT);
+                        snackbar.show();
                     } else {
                         stock = updatedStock;
                         if (stock.getDayData5() != null) {
@@ -87,7 +94,6 @@ public class DailyTimeFragment extends Fragment implements CallToFragmentInterfa
                 stockDayCustomAdapter.notifyDataSetChanged();
             }
         });
-        stockDetailedListView.setAdapter(stockDayCustomAdapter);
     }
 
     public void clearData(){

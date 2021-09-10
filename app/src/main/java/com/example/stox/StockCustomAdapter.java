@@ -50,7 +50,7 @@ public class StockCustomAdapter extends ArrayAdapter<Stock> {
         viewHolder.lastTradePrice.setText(decimalFormat.format(stock.getLastTradePrice()));
         String changedValue = decimalFormat.format(stock.getChangeValue());
         viewHolder.changeValue.setText(changedValue);
-        if(changedValue.startsWith("-")){
+        if(stock.getChangeValue() < 0.0){
             viewHolder.changeValue.setTextColor(Color.parseColor("#ED7373"));
             viewHolder.lastTradePrice.setTextColor(Color.parseColor("#ED7373"));
         }else{

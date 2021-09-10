@@ -10,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -37,6 +39,8 @@ public class StocksFragment extends Fragment {
     private RequestQueue queue;
     private StockCustomAdapter arrayAdapter;
     private SharedPreferences sharedPreferences;
+    private ListView listView;
+    private RelativeLayout noStocksRelativeLayout;
 
     @Override
     public View onCreateView(
@@ -51,6 +55,7 @@ public class StocksFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        noStocksRelativeLayout = view.findViewById(R.id.no_stocks);
         stockSet = new LinkedHashSet<>();
         sharedPreferences = requireActivity().getSharedPreferences("Stocks", Context.MODE_PRIVATE);
         @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -61,7 +66,12 @@ public class StocksFragment extends Fragment {
         if(savedJSON != null && !Objects.equals(savedJSON, "Empty Stock")){
             stockSet.addAll(gson.fromJson(savedJSON, type));
         }
-        ListView listView = view.findViewById(R.id.stocks_list_view);
+        if(stockSet.size() > 0){
+            noStocksRelativeLayout.setVisibility(View.INVISIBLE);
+        }else{
+            noStocksRelativeLayout.setVisibility(View.VISIBLE);
+        }
+        listView = view.findViewById(R.id.stocks_list_view);
         arrayAdapter = new StockCustomAdapter(
                 requireActivity(),
                 R.layout.custom_stock_text_view,
@@ -80,7 +90,15 @@ public class StocksFragment extends Fragment {
                 Intent intent = new Intent(requireActivity(), StockDetailedViewActivity.class);
                 Gson gson = new Gson();
                 String jsonStockObject = gson.toJson(clickedStock);
-                intent.putExtra("Stock", jsonStockObject);
+                intent.putExtra("Search", jsonStockObject);
+                startActivity(intent);
+            }
+        });
+        ImageButton noFavsButton = view.findViewById(R.id.no_favs);
+        noFavsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(requireActivity(), SearchActivity.class);
                 startActivity(intent);
             }
         });
@@ -116,9 +134,16 @@ public class StocksFragment extends Fragment {
         if(savedJSON != null && !Objects.equals(savedJSON, "Empty Stock")){
             stockSet.addAll(gson.fromJson(savedJSON, type));
         }
+        if(stockSet.size() > 0){
+            noStocksRelativeLayout.setVisibility(View.INVISIBLE);
+        }else{
+            noStocksRelativeLayout.setVisibility(View.VISIBLE);
+        }
+        Log.e(TAG, "stocks in stocksFragment: " + stockSet);
         arrayAdapter.clear();
         arrayAdapter.addAll(stockSet);
         arrayAdapter.notifyDataSetChanged();
+        listView.setAdapter(arrayAdapter);
     }
 
     @Override
