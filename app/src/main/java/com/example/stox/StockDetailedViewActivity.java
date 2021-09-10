@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,12 +28,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public class StockDetailedViewActivity extends AppCompatActivity {
     private static final String TAG = "StockDetailActivity";
     private ViewPager2 timeViewPager;
-    private TimeDurationFragmentAdapter timeDurationFragmentAdapter;
     private static CallToFragmentInterface callToFragmentInterface;
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -41,7 +42,7 @@ public class StockDetailedViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stock_detailed_view);
         Intent intent = getIntent();
-        String jsonStockData = intent.getStringExtra("Stock");
+        String jsonStockData = intent.getStringExtra("Search");
         final Gson[] gson = {new Gson()};
         List<Stock> savedStocks = new LinkedList<>();
         Stock stock = gson[0].fromJson(jsonStockData, Stock.class);
@@ -49,6 +50,13 @@ public class StockDetailedViewActivity extends AppCompatActivity {
         stockCodeTextView.setText(stock.getStockSymbol());
         TextView stockNameTextView = findViewById(R.id.stock_name);
         stockNameTextView.setText(stock.getStockName());
+        ImageView backButton  =findViewById(R.id.back_button_search);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         ImageView favIcon = findViewById(R.id.fav_icon);
         final boolean[] isFilledIcon = {false};
         if (stock.isFav()) {
@@ -61,7 +69,9 @@ public class StockDetailedViewActivity extends AppCompatActivity {
         Type type = new TypeToken<List<Stock>>(){}.getType();
         gson[0] = new Gson();
         Log.d(TAG, "data saved in shared prefs: " + savedJSON);
-        savedStocks = gson[0].fromJson(savedJSON, type);
+        if(savedJSON != null && !Objects.equals(savedJSON, "Empty Stock")){
+            savedStocks = gson[0].fromJson(savedJSON, type);
+        }
         if(savedStocks.contains(stock)){
             isFilledIcon[0] = true;
             favIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_round_favorite_filled_24));
@@ -120,7 +130,7 @@ public class StockDetailedViewActivity extends AppCompatActivity {
             }
         });
         FragmentManager fragmentManager = getSupportFragmentManager();
-        timeDurationFragmentAdapter = new TimeDurationFragmentAdapter(fragmentManager, getLifecycle());
+        TimeDurationFragmentAdapter timeDurationFragmentAdapter = new TimeDurationFragmentAdapter(fragmentManager, getLifecycle());
         timeViewPager = findViewById(R.id.time_viewpager2);
         timeViewPager.setAdapter(timeDurationFragmentAdapter);
 

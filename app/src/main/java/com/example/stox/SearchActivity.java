@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
 import java.util.LinkedHashSet;
@@ -36,6 +38,7 @@ public class SearchActivity extends AppCompatActivity {
     private SearchStockCustomAdapter arrayAdapter;
     private ListView listView;
     private ShimmerFrameLayout shimmerFrameLayout;
+    private RelativeLayout noSignalLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,8 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.search_activity_layout);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         shimmerFrameLayout = findViewById(R.id.search_shimmer);
+        noSignalLayout = findViewById(R.id.no_signal_layout);
+        noSignalLayout.setVisibility(View.INVISIBLE);
         LinearLayout linearLayout = findViewById(R.id.placeholder_container_layout);
         for(int i = 1; i <= 10; i++){
             View view = inflater.inflate(R.layout.placeholder_textview_for_shimmer, null);
@@ -58,7 +63,7 @@ public class SearchActivity extends AppCompatActivity {
                 Intent intent = new Intent(SearchActivity.this, StockDetailedViewActivity.class);
                 Gson gson = new Gson();
                 String jsonStockObject = gson.toJson(listStock[0]);
-                intent.putExtra("Stock", jsonStockObject);
+                intent.putExtra("Search", jsonStockObject);
                 startActivity(intent);
             }
         });
@@ -76,13 +81,11 @@ public class SearchActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 boolean result = false;
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    if(shimmerFrameLayout.getVisibility() == View.INVISIBLE){
-                        shimmerFrameLayout.setVisibility(View.VISIBLE);
-                        shimmerFrameLayout.startShimmer();
-                    }
+                    shimmerFrameLayout.setVisibility(View.VISIBLE);
+                    shimmerFrameLayout.startShimmer();
                     String value = textView.getText().toString();
                     searchList.clear();
-                    if(arrayAdapter != null ){
+                    if (arrayAdapter != null) {
                         arrayAdapter.clear();
                     }
                     performSearch(value, apiDataViewModel);
@@ -106,12 +109,22 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onChanged(Set<Stock> updatedStocks) {
                 Log.d(TAG, "final list : " + updatedStocks);
-                if(updatedStocks.size() > 0){
-                    shimmerFrameLayout.stopShimmer();
-                    shimmerFrameLayout.setVisibility(View.INVISIBLE);
-                    searchList.clear();
+                if(updatedStocks == null){
                     arrayAdapter.clear();
-                    arrayAdapter.addAll(updatedStocks);
+                    Snackbar snackbar = Snackbar.make(shimmerFrameLayout,"Network error.", Snackbar.LENGTH_SHORT);
+                    snackbar.show();
+                    //shimmerFrameLayout.stopShimmer();
+                    shimmerFrameLayout.setVisibility(View.INVISIBLE);
+                    noSignalLayout.setVisibility(View.VISIBLE);
+                }else{
+                    if(updatedStocks.size() > 0){
+                        noSignalLayout.setVisibility(View.INVISIBLE);
+                        shimmerFrameLayout.stopShimmer();
+                        shimmerFrameLayout.setVisibility(View.INVISIBLE);
+                        searchList.clear();
+                        arrayAdapter.clear();
+                        arrayAdapter.addAll(updatedStocks);
+                    }
                 }
             }
         });

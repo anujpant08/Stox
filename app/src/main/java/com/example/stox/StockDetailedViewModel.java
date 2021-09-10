@@ -102,7 +102,7 @@ public class StockDetailedViewModel extends ViewModel {
                 switch(DAY + dayNo){
                     case "Day1":
                         stock.setDayData1(dayData);
-                        stock.setLastTradePrice(dayData.getClose());
+                        stock.setLastTradePrice(stock.getDayData1().getClose());
                         break;
                     case  "Day2":
                         stock.setDayData2(dayData);
@@ -121,11 +121,12 @@ public class StockDetailedViewModel extends ViewModel {
                 Log.d(TAG, "Stock data for day" + dayNo + " is: " + dayData);
                 dayNo++;
             }
-            stocks.setValue(stock);
         } catch (Exception e) {
             Log.e(TAG, "An exception occurred while JSON parsing: ", e);
+            stock.setResultFetched(false);
+        }finally{
+            stocks.setValue(stock);
         }
-
     }
 
     private void extractWeekData(String response) {

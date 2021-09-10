@@ -61,12 +61,20 @@ public class MonthlyTimeFragment extends Fragment implements CallToFragmentInter
             @Override
             public void onChanged(Stock updatedStock) {
                 if(updatedStock == null){
-                    stock = null;
+                    //stock = null;
                     Log.e(TAG, "Got null stock!");
-                }else{
-                    stock = updatedStock;if(stock.getMonthData5() != null){
+                }
+                else {
+                    if (!updatedStock.isResultFetched()) {
+                        Log.e(TAG, "Network error");
                         shimmerFrameLayout.stopShimmer();
                         shimmerFrameLayout.hideShimmer();
+                    } else {
+                        stock = updatedStock;
+                        if (stock.getMonthData5() != null) {
+                            shimmerFrameLayout.stopShimmer();
+                            shimmerFrameLayout.hideShimmer();
+                        }
                     }
                 }
                 stockMonthCustomAdapter.notifyDataSetChanged();

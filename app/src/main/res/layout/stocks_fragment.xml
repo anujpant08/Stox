@@ -20,7 +20,7 @@
         android:visibility="invisible">
 
         <ImageButton
-            android:id="@+id/broken_heart"
+            android:id="@+id/no_favs"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_centerInParent="true"
@@ -29,7 +29,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/broken_heart"
+            android:layout_below="@id/no_favs"
             android:text="No favorite stocks yet. Click here to add."
             android:textColor="#B3B3B3"
             android:fontFamily="@font/open_sans"

@@ -21,7 +21,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 public class SearchAPIViewModel extends ViewModel {
@@ -40,9 +39,7 @@ public class SearchAPIViewModel extends ViewModel {
     public LiveData<Set<Stock>> getStocksList(Context context, String query) {
         if(stocks == null){
             stocks = new MutableLiveData<>();
-            stocks.setValue(new LinkedHashSet<>());
         }
-        Objects.requireNonNull(stocks.getValue()).clear();
         this.context = context;
         retrieveDataFromAPI(query);
         return stocks;
@@ -68,6 +65,7 @@ public class SearchAPIViewModel extends ViewModel {
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "exception occurred: ", error);
                 error.printStackTrace();
+                stocks.setValue(null);
             }
         });
         stringRequest.setTag(TAG);
@@ -91,6 +89,7 @@ public class SearchAPIViewModel extends ViewModel {
             addStockName();
         }catch (Exception exception){
             Log.e(TAG, "An exception occurred while parsing JSON: ", exception);
+            stocks.setValue(null);
         }
         Log.d(TAG, "List in view model: " + stocks.getValue());
     }

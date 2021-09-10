@@ -61,13 +61,20 @@ public class WeeklyTimeFragment extends Fragment implements CallToFragmentInterf
             @Override
             public void onChanged(Stock updatedStock) {
                 if(updatedStock == null){
-                    stock = null;
+                    //stock = null;
                     Log.e(TAG, "Got null stock!");
-                }else{
-                    stock = updatedStock;
-                    if(stock.getWeekData5() != null){
+                }
+                else {
+                    if (!updatedStock.isResultFetched()) {
+                        Log.e(TAG, "Network error");
                         shimmerFrameLayout.stopShimmer();
                         shimmerFrameLayout.hideShimmer();
+                    } else {
+                        stock = updatedStock;
+                        if (stock.getWeekData5() != null) {
+                            shimmerFrameLayout.stopShimmer();
+                            shimmerFrameLayout.hideShimmer();
+                        }
                     }
                 }
                 stockWeekCustomAdapter.notifyDataSetChanged();

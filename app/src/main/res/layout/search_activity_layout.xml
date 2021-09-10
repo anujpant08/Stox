@@ -77,4 +77,32 @@
         </LinearLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/no_signal_layout"
+        android:layout_centerInParent="true">
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/no_signal_icon"
+            android:src="@drawable/no_signal"
+            android:layout_centerInParent="true"
+            android:contentDescription="No Network">
+        </ImageView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text = "No network. Please check network connection settings."
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:fontFamily="@font/open_sans"
+            android:layout_below="@id/no_signal_icon">
+
+        </TextView>
+
+    </RelativeLayout>
+
 </RelativeLayout>
