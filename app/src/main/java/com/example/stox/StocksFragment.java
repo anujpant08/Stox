@@ -9,17 +9,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.android.volley.RequestQueue;
 import com.example.stox.databinding.StocksFragmentBinding;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -36,7 +33,6 @@ public class StocksFragment extends Fragment {
     private static final String TAG = "StocksFragment";
     private StocksFragmentBinding binding;
     private Set<Stock> stockSet;
-    private RequestQueue queue;
     private StockCustomAdapter arrayAdapter;
     private SharedPreferences sharedPreferences;
     private ListView listView;
@@ -54,105 +50,102 @@ public class StocksFragment extends Fragment {
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        noStocksRelativeLayout = view.findViewById(R.id.no_stocks);
-        stockSet = new LinkedHashSet<>();
-        sharedPreferences = requireActivity().getSharedPreferences("Stocks", Context.MODE_PRIVATE);
-        @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = sharedPreferences.edit();
-        String savedJSON = sharedPreferences.getString("Stocks", "Empty Stock");
-        Type type = new TypeToken<List<Stock>>(){}.getType();
-        Gson gson = new Gson();
-        Log.d(TAG, "data saved in shared prefs: " + savedJSON);
-        if(savedJSON != null && !Objects.equals(savedJSON, "Empty Stock")){
-            stockSet.addAll(gson.fromJson(savedJSON, type));
-        }
-        if(stockSet.size() > 0){
-            noStocksRelativeLayout.setVisibility(View.INVISIBLE);
-        }else{
-            noStocksRelativeLayout.setVisibility(View.VISIBLE);
-        }
-        listView = view.findViewById(R.id.stocks_list_view);
-        arrayAdapter = new StockCustomAdapter(
-                requireActivity(),
-                R.layout.custom_stock_text_view,
-                new ArrayList<>()
-        );
-        listView.setAdapter(arrayAdapter);
-        arrayAdapter.addAll(stockSet);
-        APIDataViewModel apiDataViewModel = new ViewModelProvider(this).get(APIDataViewModel.class);
-        for(Stock stock : stockSet){
-            callAPIService(editor, apiDataViewModel, stock.getStockSymbol());
-        }
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Stock clickedStock = (Stock)listView.getItemAtPosition(position);
+        try {
+            super.onViewCreated(view, savedInstanceState);
+            noStocksRelativeLayout = view.findViewById(R.id.no_stocks);
+            stockSet = new LinkedHashSet<>();
+            sharedPreferences = requireActivity().getSharedPreferences("Stocks", Context.MODE_PRIVATE);
+            @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = sharedPreferences.edit();
+            String savedJSON = sharedPreferences.getString("Stocks", "Empty Stock");
+            Type type = new TypeToken<List<Stock>>() {
+            }.getType();
+            Gson gson = new Gson();
+            Log.d(TAG, "data saved in shared prefs: " + savedJSON);
+            if (savedJSON != null && !Objects.equals(savedJSON, "Empty Stock")) {
+                stockSet.addAll(gson.fromJson(savedJSON, type));
+            }
+            if (stockSet.size() > 0) {
+                noStocksRelativeLayout.setVisibility(View.INVISIBLE);
+            } else {
+                noStocksRelativeLayout.setVisibility(View.VISIBLE);
+            }
+            listView = view.findViewById(R.id.stocks_list_view);
+            arrayAdapter = new StockCustomAdapter(
+                    requireActivity(),
+                    R.layout.custom_stock_text_view,
+                    new ArrayList<>()
+            );
+            listView.setAdapter(arrayAdapter);
+            arrayAdapter.addAll(stockSet);
+            APIDataViewModel apiDataViewModel = new ViewModelProvider(this).get(APIDataViewModel.class);
+            for (Stock stock : stockSet) {
+                callAPIService(editor, apiDataViewModel, stock.getStockSymbol());
+            }
+            listView.setOnItemClickListener((adapterView, view1, position, l) -> {
+                Stock clickedStock = (Stock) listView.getItemAtPosition(position);
                 Intent intent = new Intent(requireActivity(), StockDetailedViewActivity.class);
-                Gson gson = new Gson();
-                String jsonStockObject = gson.toJson(clickedStock);
+                Gson gson1 = new Gson();
+                String jsonStockObject = gson1.toJson(clickedStock);
                 intent.putExtra("Search", jsonStockObject);
                 startActivity(intent);
-            }
-        });
-        ImageButton noFavsButton = view.findViewById(R.id.no_favs);
-        noFavsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            });
+            ImageButton noFavsButton = view.findViewById(R.id.no_favs);
+            noFavsButton.setOnClickListener(view12 -> {
                 Intent intent = new Intent(requireActivity(), SearchActivity.class);
                 startActivity(intent);
-            }
-        });
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "An exception occurred in homepage: ", e);
+        }
     }
 
     private void callAPIService(SharedPreferences.Editor editor, APIDataViewModel apiDataViewModel, String stockSymbol) {
-        apiDataViewModel.getStocksList(getActivity(), stockSymbol, stockSet).observe(getViewLifecycleOwner(), new Observer<Set<Stock>>() {
-            @Override
-            public void onChanged(Set<Stock> updatedStocks) {
-                Log.d(TAG, "final list : " + updatedStocks);
-                Gson gson = new Gson();
-                stockSet = updatedStocks;
-                String updatedJSON = gson.toJson(stockSet);
-                Log.d(TAG, "updated JSON: " + updatedJSON);
-                editor.putString("Stocks", updatedJSON);
-                editor.apply();
-                arrayAdapter.clear();
-                arrayAdapter.addAll(stockSet);
-                arrayAdapter.notifyDataSetChanged();
-            }
+        apiDataViewModel.getStocksList(getActivity(), stockSymbol, stockSet).observe(getViewLifecycleOwner(), updatedStocks -> {
+            Log.d(TAG, "final list : " + updatedStocks);
+            Gson gson = new Gson();
+            stockSet = updatedStocks;
+            String updatedJSON = gson.toJson(stockSet);
+            Log.d(TAG, "updated JSON: " + updatedJSON);
+            editor.putString("Stocks", updatedJSON);
+            editor.apply();
+            arrayAdapter.clear();
+            arrayAdapter.addAll(stockSet);
+            arrayAdapter.notifyDataSetChanged();
         });
     }
 
     @Override
     public void onResume() {
-        super.onResume();
-        stockSet.clear();
-        sharedPreferences = requireActivity().getSharedPreferences("Stocks", Context.MODE_PRIVATE);
-        String savedJSON = sharedPreferences.getString("Stocks", "Empty Stock");
-        Type type = new TypeToken<List<Stock>>(){}.getType();
-        Gson gson = new Gson();
-        Log.d(TAG, "data saved in shared prefs: " + savedJSON);
-        if(savedJSON != null && !Objects.equals(savedJSON, "Empty Stock")){
-            stockSet.addAll(gson.fromJson(savedJSON, type));
+        try {
+            super.onResume();
+            stockSet.clear();
+            sharedPreferences = requireActivity().getSharedPreferences("Stocks", Context.MODE_PRIVATE);
+            String savedJSON = sharedPreferences.getString("Stocks", "Empty Stock");
+            Type type = new TypeToken<List<Stock>>() {
+            }.getType();
+            Gson gson = new Gson();
+            Log.d(TAG, "data saved in shared prefs: " + savedJSON);
+            if (savedJSON != null && !Objects.equals(savedJSON, "Empty Stock")) {
+                stockSet.addAll(gson.fromJson(savedJSON, type));
+            }
+            if (stockSet.size() > 0) {
+                noStocksRelativeLayout.setVisibility(View.INVISIBLE);
+            } else {
+                noStocksRelativeLayout.setVisibility(View.VISIBLE);
+            }
+            Log.e(TAG, "stocks in stocksFragment: " + stockSet);
+            arrayAdapter.clear();
+            arrayAdapter.addAll(stockSet);
+            arrayAdapter.notifyDataSetChanged();
+            listView.setAdapter(arrayAdapter);
+        } catch (Exception e) {
+            Log.e(TAG, "An exception occurred while resuming frag: ", e);
         }
-        if(stockSet.size() > 0){
-            noStocksRelativeLayout.setVisibility(View.INVISIBLE);
-        }else{
-            noStocksRelativeLayout.setVisibility(View.VISIBLE);
-        }
-        Log.e(TAG, "stocks in stocksFragment: " + stockSet);
-        arrayAdapter.clear();
-        arrayAdapter.addAll(stockSet);
-        arrayAdapter.notifyDataSetChanged();
-        listView.setAdapter(arrayAdapter);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        if(queue != null){
-            queue.cancelAll(TAG);
-        }
     }
-
 }

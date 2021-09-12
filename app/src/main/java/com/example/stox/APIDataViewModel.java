@@ -37,13 +37,17 @@ public class APIDataViewModel extends ViewModel {
         stocks.setValue(updatedStocks);
     }
     public LiveData<Set<Stock>> getStocksList(Context context, String stockSymbol, Set<Stock> favStocks) {
-        this.favStocks = favStocks;
-        if(stocks == null){
-            stocks = new MutableLiveData<>();
-            stocks.setValue(favStocks);
+        try {
+            this.favStocks = favStocks;
+            if (stocks == null) {
+                stocks = new MutableLiveData<>();
+                stocks.setValue(favStocks);
+            }
+            this.context = context;
+            retrieveDataFromAPI(stockSymbol);
+        } catch (Exception e) {
+            Log.e(TAG, "An exception occurred while getting data for homepage: ", e);
         }
-        this.context = context;
-        retrieveDataFromAPI(stockSymbol);
         return stocks;
     }
 

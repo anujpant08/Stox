@@ -27,14 +27,12 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Set;
 
 public class SearchActivity extends AppCompatActivity {
     private static final String TAG = "SearchActivity";
-    private Set<Stock> searchList;
     private SearchStockCustomAdapter arrayAdapter;
     private ListView listView;
     private ShimmerFrameLayout shimmerFrameLayout;
@@ -42,35 +40,38 @@ public class SearchActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.search_activity_layout);
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        shimmerFrameLayout = findViewById(R.id.search_shimmer);
-        noSignalLayout = findViewById(R.id.no_signal_layout);
-        noSignalLayout.setVisibility(View.INVISIBLE);
-        LinearLayout linearLayout = findViewById(R.id.placeholder_container_layout);
-        for(int i = 1; i <= 10; i++){
-            View view = inflater.inflate(R.layout.placeholder_textview_for_shimmer, null);
-            linearLayout.addView(view);
-        }
-        setupToolbar();
-        handleAPICalls();
-        final Stock[] listStock = {null};
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                listStock[0] = (Stock)listView.getItemAtPosition(position);
-                Intent intent = new Intent(SearchActivity.this, StockDetailedViewActivity.class);
-                Gson gson = new Gson();
-                String jsonStockObject = gson.toJson(listStock[0]);
-                intent.putExtra("Search", jsonStockObject);
-                startActivity(intent);
+        try {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.search_activity_layout);
+            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            shimmerFrameLayout = findViewById(R.id.search_shimmer);
+            noSignalLayout = findViewById(R.id.no_signal_layout);
+            noSignalLayout.setVisibility(View.INVISIBLE);
+            LinearLayout linearLayout = findViewById(R.id.placeholder_container_layout);
+            for (int i = 1; i <= 10; i++) {
+                View view = inflater.inflate(R.layout.placeholder_textview_for_shimmer, null);
+                linearLayout.addView(view);
             }
-        });
+            setupToolbar();
+            handleAPICalls();
+            final Stock[] listStock = {null};
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                    listStock[0] = (Stock) listView.getItemAtPosition(position);
+                    Intent intent = new Intent(SearchActivity.this, StockDetailedViewActivity.class);
+                    Gson gson = new Gson();
+                    String jsonStockObject = gson.toJson(listStock[0]);
+                    intent.putExtra("Search", jsonStockObject);
+                    startActivity(intent);
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "An exception occurred in Search activity: ", e);
+        }
     }
 
     private void handleAPICalls() {
-        searchList = new LinkedHashSet<>();
         arrayAdapter = new SearchStockCustomAdapter(this, R.layout.custom_search_stock_layout, new LinkedList<>());
         listView = findViewById(R.id.search_list_view);
         listView.setAdapter(arrayAdapter);
@@ -84,9 +85,9 @@ public class SearchActivity extends AppCompatActivity {
                     shimmerFrameLayout.setVisibility(View.VISIBLE);
                     shimmerFrameLayout.startShimmer();
                     String value = textView.getText().toString();
-                    searchList.clear();
                     if (arrayAdapter != null) {
                         arrayAdapter.clear();
+                        arrayAdapter.notifyDataSetChanged();
                     }
                     performSearch(value, apiDataViewModel);
                     result = true;
@@ -121,7 +122,6 @@ public class SearchActivity extends AppCompatActivity {
                         noSignalLayout.setVisibility(View.INVISIBLE);
                         shimmerFrameLayout.stopShimmer();
                         shimmerFrameLayout.setVisibility(View.INVISIBLE);
-                        searchList.clear();
                         arrayAdapter.clear();
                         arrayAdapter.addAll(updatedStocks);
                     }
@@ -132,7 +132,6 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            searchList.clear();
             arrayAdapter.clear();
             arrayAdapter.notifyDataSetChanged();
             finish();
