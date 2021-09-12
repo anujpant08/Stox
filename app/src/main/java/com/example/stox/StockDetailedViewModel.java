@@ -50,24 +50,31 @@ public class StockDetailedViewModel extends ViewModel {
     }
 
     private void retrieveDataFromAPI() {
-        AlphaVantageAPICall alphaVantageAPICall = new AlphaVantageAPICall(BASE_URL, API_KEY);
-        List<String> params = new ArrayList<>();
-        params.add("function=" + stock.getRequestType());
-        params.add("symbol=" + stock.getStockSymbol());
-        alphaVantageAPICall.setParams(params);
-        RequestQueue queue = Volley.newRequestQueue(this.context);
-        String finalURL = alphaVantageAPICall.getURL();
-        Log.d(TAG, "URL: " + finalURL);
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, finalURL, this::extractJSON, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "exception occurred: " + error.getMessage());
-                stock.setResultFetched(false);
-                stocks.setValue(stock);
-            }
-        });
-        stringRequest.setTag(TAG);
-        queue.add(stringRequest);
+        try {
+            AlphaVantageAPICall alphaVantageAPICall = new AlphaVantageAPICall(BASE_URL, API_KEY);
+            List<String> params = new ArrayList<>();
+            params.add("function=" + stock.getRequestType());
+            params.add("symbol=" + stock.getStockSymbol());
+            alphaVantageAPICall.setParams(params);
+            RequestQueue queue = Volley.newRequestQueue(this.context);
+            String finalURL = alphaVantageAPICall.getURL();
+            Log.d(TAG, "URL: " + finalURL);
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, finalURL, this::extractJSON, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e(TAG, "exception occurred: " + error.getMessage());
+                    stock.setResultFetched(false);
+                    stocks.setValue(stock);
+                }
+            });
+            stringRequest.setTag(TAG);
+            queue.add(stringRequest);
+        } catch (Exception e) {
+            Log.e(TAG, "An exception occurred while fetching data: ", e);
+            stock.setResultFetched(false);
+        }finally{
+            stocks.setValue(stock);
+        }
     }
     private void extractJSON(String response) {
         try {
@@ -174,6 +181,9 @@ public class StockDetailedViewModel extends ViewModel {
             stocks.setValue(stock);
         } catch (Exception e) {
             Log.e(TAG, "An exception occurred while JSON parsing: ", e);
+            stock.setResultFetched(false);
+        }finally{
+            stocks.setValue(stock);
         }
     }
     private void extractMonthData(String response) {
@@ -221,6 +231,9 @@ public class StockDetailedViewModel extends ViewModel {
             stocks.setValue(stock);
         } catch (Exception e) {
             Log.e(TAG, "An exception occurred while JSON parsing: ", e);
+            stock.setResultFetched(false);
+        }finally{
+            stocks.setValue(stock);
         }
     }
 }

@@ -37,11 +37,17 @@ public class SearchAPIViewModel extends ViewModel {
         stocks.setValue(updatedStocks);
     }
     public LiveData<Set<Stock>> getStocksList(Context context, String query) {
-        if(stocks == null){
-            stocks = new MutableLiveData<>();
+        try {
+            if (stocks == null) {
+                stocks = new MutableLiveData<>();
+            }else if(stocks.getValue() != null){
+                stocks.getValue().clear();
+            }
+            this.context = context;
+            retrieveDataFromAPI(query);
+        } catch (Exception e) {
+            Log.e(TAG, "An exception occurred in search process: ", e);
         }
-        this.context = context;
-        retrieveDataFromAPI(query);
         return stocks;
     }
 
