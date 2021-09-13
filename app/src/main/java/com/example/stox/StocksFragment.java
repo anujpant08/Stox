@@ -18,12 +18,15 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.stox.databinding.StocksFragmentBinding;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -36,7 +39,9 @@ public class StocksFragment extends Fragment {
     private StockCustomAdapter arrayAdapter;
     private SharedPreferences sharedPreferences;
     private ListView listView;
+    private List<Stock> sortedList;
     private RelativeLayout noStocksRelativeLayout;
+    private ExtendedFloatingActionButton searchFAB;
 
     @Override
     public View onCreateView(
@@ -53,11 +58,12 @@ public class StocksFragment extends Fragment {
         try {
             super.onViewCreated(view, savedInstanceState);
             noStocksRelativeLayout = view.findViewById(R.id.no_stocks);
+            searchFAB = requireActivity().findViewById(R.id.search_floating_button);
             stockSet = new LinkedHashSet<>();
             sharedPreferences = requireActivity().getSharedPreferences("Stocks", Context.MODE_PRIVATE);
             @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = sharedPreferences.edit();
             String savedJSON = sharedPreferences.getString("Stocks", "Empty Stock");
-            Type type = new TypeToken<List<Stock>>() {
+            Type type = new TypeToken<LinkedList<Stock>>() {
             }.getType();
             Gson gson = new Gson();
             Log.d(TAG, "data saved in shared prefs: " + savedJSON);
@@ -65,8 +71,10 @@ public class StocksFragment extends Fragment {
                 stockSet.addAll(gson.fromJson(savedJSON, type));
             }
             if (stockSet.size() > 0) {
+                searchFAB.setVisibility(View.VISIBLE);
                 noStocksRelativeLayout.setVisibility(View.INVISIBLE);
             } else {
+                searchFAB.setVisibility(View.INVISIBLE);
                 noStocksRelativeLayout.setVisibility(View.VISIBLE);
             }
             listView = view.findViewById(R.id.stocks_list_view);
@@ -76,7 +84,9 @@ public class StocksFragment extends Fragment {
                     new ArrayList<>()
             );
             listView.setAdapter(arrayAdapter);
-            arrayAdapter.addAll(stockSet);
+            sortedList = new ArrayList<>(stockSet);
+            Collections.sort(sortedList, Collections.reverseOrder());
+            arrayAdapter.addAll(sortedList);
             APIDataViewModel apiDataViewModel = new ViewModelProvider(this).get(APIDataViewModel.class);
             for (Stock stock : stockSet) {
                 callAPIService(editor, apiDataViewModel, stock.getStockSymbol());
@@ -109,7 +119,10 @@ public class StocksFragment extends Fragment {
             editor.putString("Stocks", updatedJSON);
             editor.apply();
             arrayAdapter.clear();
-            arrayAdapter.addAll(stockSet);
+            sortedList.clear();
+            sortedList.addAll(stockSet);
+            Collections.sort(sortedList, Collections.reverseOrder());
+            arrayAdapter.addAll(sortedList);
             arrayAdapter.notifyDataSetChanged();
         });
     }
@@ -129,13 +142,19 @@ public class StocksFragment extends Fragment {
                 stockSet.addAll(gson.fromJson(savedJSON, type));
             }
             if (stockSet.size() > 0) {
+                searchFAB.setVisibility(View.VISIBLE);
                 noStocksRelativeLayout.setVisibility(View.INVISIBLE);
             } else {
+                searchFAB.setVisibility(View.INVISIBLE);
                 noStocksRelativeLayout.setVisibility(View.VISIBLE);
             }
             Log.e(TAG, "stocks in stocksFragment: " + stockSet);
             arrayAdapter.clear();
-            arrayAdapter.addAll(stockSet);
+            sortedList.clear();
+            sortedList.addAll(stockSet);
+            Collections.sort(sortedList, Collections.reverseOrder());
+            Log.e(TAG, "Sorted list: " + sortedList);
+            arrayAdapter.addAll(sortedList);
             arrayAdapter.notifyDataSetChanged();
             listView.setAdapter(arrayAdapter);
         } catch (Exception e) {

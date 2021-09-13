@@ -4,9 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomePageMainActivity">
+    tools:context=".HomePageMainActivity"
+    android:background="@color/black">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/stocks_title"
+        android:layout_margin="16dp"
+        android:text="Stocks"
+        android:fontFamily="@font/open_sans_bold"
+        android:textColor="@color/white"
+        android:textSize="20sp">
+
+    </TextView>
+    <!--<com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
@@ -18,22 +30,42 @@
             android:layout_height="match_parent"
             android:id="@+id/material_toolbar">
         </androidx.appcompat.widget.Toolbar>
-    </com.google.android.material.appbar.AppBarLayout>
-    <com.google.android.material.tabs.TabLayout
+    </com.google.android.material.appbar.AppBarLayout>-->
+    <!--<com.google.android.material.tabs.TabLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/app_bar_layout"
         android:background="@color/black"
         android:id="@+id/tabsLayout">
-    </com.google.android.material.tabs.TabLayout>
+    </com.google.android.material.tabs.TabLayout>-->
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/tabsLayout">
+        android:layout_below="@id/stocks_title">
 
     </androidx.viewpager2.widget.ViewPager2>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/search_floating_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text = "Add stock"
+        android:textColor="@color/dark_primary_color"
+        android:fontFamily="@font/open_sans_bold"
+        android:backgroundTint="@color/primary_color"
+        app:icon="@drawable/add"
+        app:iconPadding="4dp"
+        app:iconTint="#FF013240">
+
+    </com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton>
 
 
 </RelativeLayout>

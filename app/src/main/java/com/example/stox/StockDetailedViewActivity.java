@@ -24,7 +24,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -66,7 +67,7 @@ public class StockDetailedViewActivity extends AppCompatActivity {
             SharedPreferences sharedPreferences = this.getSharedPreferences("Stocks", Context.MODE_PRIVATE);
             @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = sharedPreferences.edit();
             String savedJSON = sharedPreferences.getString("Stocks", "Empty Stock");
-            Type type = new TypeToken<List<Stock>>() {
+            Type type = new TypeToken<LinkedList<Stock>>() {
             }.getType();
             gson[0] = new Gson();
             Log.d(TAG, "data saved in shared prefs: " + savedJSON);
@@ -79,7 +80,7 @@ public class StockDetailedViewActivity extends AppCompatActivity {
             }
             Animation scaleDown = AnimationUtils.loadAnimation(this, R.anim.scale_down);
             Animation scaleUp = AnimationUtils.loadAnimation(this, R.anim.scale_up);
-            Set<Stock> finalSavedStocks = new HashSet<>(savedStocks);
+            Set<Stock> finalSavedStocks = new LinkedHashSet<>(savedStocks);
             favIcon.setOnClickListener(new View.OnClickListener() {
                 @SuppressLint("UseCompatLoadingForDrawables")
                 @Override
@@ -97,6 +98,7 @@ public class StockDetailedViewActivity extends AppCompatActivity {
                                 favIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_round_favorite_filled_24));
                                 isFilledIcon[0] = true;
                                 stock.setFav(true);
+                                stock.setDateAdded(new Date());
                                 Log.e(TAG, "Stock set as fav: " + stock);
                                 finalSavedStocks.add(stock);
                                 gson[0] = new Gson();

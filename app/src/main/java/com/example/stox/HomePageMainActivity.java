@@ -1,18 +1,15 @@
 package com.example.stox;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.stox.databinding.ActivityHomePageMainBinding;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 public class HomePageMainActivity extends AppCompatActivity {
@@ -26,10 +23,19 @@ public class HomePageMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         com.example.stox.databinding.ActivityHomePageMainBinding binding = ActivityHomePageMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        Toolbar mainToolbar = findViewById(R.id.material_toolbar);
-        mainToolbar.setTitle("Home");
-        setSupportActionBar(mainToolbar);
-        tabLayout = findViewById(R.id.tabsLayout);
+        ExtendedFloatingActionButton searchFAB = findViewById(R.id.search_floating_button);
+        searchFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomePageMainActivity.this, SearchActivity.class);
+                startActivity(intent);
+            }
+        });
+        /*Toolbar mainToolbar = findViewById(R.id.material_toolbar);
+        mainToolbar.setTitle("Stocks");
+        mainToolbar.setSubtitle("Your favorites");
+        setSupportActionBar(mainToolbar);*/
+        //tabLayout = findViewById(R.id.tabsLayout);
         viewPager2 = findViewById(R.id.viewPager2);
         setupFragments();
         //retrieveDataFromAPI();
@@ -38,8 +44,10 @@ public class HomePageMainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentAdapter = new FragmentAdapter(fragmentManager, getLifecycle());
         viewPager2.setAdapter(fragmentAdapter);
-        tabLayout.addTab(tabLayout.newTab().setText("Stocks"));
-        tabLayout.addTab(tabLayout.newTab().setText("Index"));
+        //Removing tab layout
+
+        /*tabLayout.addTab(tabLayout.newTab().setText("Stocks"));
+        //tabLayout.addTab(tabLayout.newTab().setText("Index"));
         tabLayout.setTabTextColors(Color.parseColor("#FFFFFF"), Color.parseColor("#FFFFFF"));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -62,24 +70,6 @@ public class HomePageMainActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 tabLayout.selectTab(tabLayout.getTabAt(position));
             }
-        });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.homepage_menu_items, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.home_search_button) {
-            Intent intent = new Intent(this, SearchActivity.class);
-            startActivity(intent);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-
+        });*/
     }
 }

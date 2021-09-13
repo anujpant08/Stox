@@ -2,9 +2,10 @@ package com.example.stox;
 
 import androidx.annotation.NonNull;
 
+import java.util.Date;
 import java.util.Objects;
 
-public class Stock {
+public class Stock implements Comparable {
     String stockSymbol = "";
     String stockName = "";
     Double openPrice = 0.00;
@@ -30,6 +31,7 @@ public class Stock {
     MonthData monthData4;
     MonthData monthData5;
     boolean resultFetched = true;
+    Date dateAdded;
 
     public String getStockSymbol() {
         return stockSymbol;
@@ -231,6 +233,14 @@ public class Stock {
         this.resultFetched = resultFetched;
     }
 
+    public Date getDateAdded() {
+        return dateAdded;
+    }
+
+    public void setDateAdded(Date dateAdded) {
+        this.dateAdded = dateAdded;
+    }
+
     @Override
     public boolean equals(Object stockObject) {
         if (this == stockObject) return true;
@@ -254,7 +264,7 @@ public class Stock {
                 ", closePrice=" + closePrice +
                 ", matchPercentage=" + matchPercentage +
                 ", lastTradePrice=" + lastTradePrice +
-                ", changeValue='" + changeValue + '\'' +
+                ", changeValue=" + changeValue +
                 ", dayData1=" + dayData1 +
                 ", dayData2=" + dayData2 +
                 ", dayData3=" + dayData3 +
@@ -267,6 +277,22 @@ public class Stock {
                 ", weekData3=" + weekData3 +
                 ", weekData4=" + weekData4 +
                 ", weekData5=" + weekData5 +
+                ", monthData1=" + monthData1 +
+                ", monthData2=" + monthData2 +
+                ", monthData3=" + monthData3 +
+                ", monthData4=" + monthData4 +
+                ", monthData5=" + monthData5 +
+                ", resultFetched=" + resultFetched +
+                ", dateAdded=" + dateAdded +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Stock object = (Stock)o;
+        if(this.getDateAdded()!= null && object.getDateAdded()!= null){
+            return this.getDateAdded().compareTo(object.getDateAdded());
+        }
+        return 0;
     }
 }
