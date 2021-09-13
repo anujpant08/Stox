@@ -14,14 +14,14 @@ public class FragmentAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        if (position == 0) {
+        /*if (position == 0) {
             return new StocksFragment();
-        }
-        return new IndexFragment();
+        }*/
+        return new StocksFragment();
     }
 
     @Override
     public int getItemCount() {
-        return 2;
+        return 1;
     }
 }
