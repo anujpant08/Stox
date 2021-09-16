@@ -8,10 +8,18 @@
     android:padding="8dp"
     tools:context=".StocksFragment">
 
-    <ListView
-        android:id="@+id/stocks_list_view"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/stocks_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:longClickable="true"/>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <RelativeLayout
         android:id="@+id/no_stocks"
@@ -24,17 +32,18 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_centerInParent="true"
-            android:contentDescription="Add favorites"
-            android:background="@drawable/add"/>
+            android:background="@drawable/add"
+            android:contentDescription="Add favorites" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/no_favs"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/open_sans"
+            android:gravity="center"
             android:text="No favorite stocks yet. Click here to add."
             android:textColor="#B3B3B3"
-            android:fontFamily="@font/open_sans"
-            android:layout_marginTop="8dp"
-            android:gravity="center"
             android:textSize="12sp">
 
         </TextView>
