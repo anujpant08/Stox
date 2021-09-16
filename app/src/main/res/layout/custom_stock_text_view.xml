@@ -8,15 +8,27 @@
     android:padding="16dp"
     android:orientation="vertical">
 
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/checkbox"
+        android:layout_width="26dp"
+        android:layout_height="22dp"
+        android:visibility="visible"
+        app:buttonTint="@color/primary_color"
+        app:layout_constraintBottom_toBottomOf="@+id/stock_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:useMaterialThemeColors="false">
+
+    </com.google.android.material.checkbox.MaterialCheckBox>
     <TextView
         android:id="@+id/stock_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/open_sans_bold"
         android:text="hello"
+        android:layout_marginStart="10dp"
         android:textColor="@color/white"
         android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/checkbox"
         app:layout_constraintTop_toTopOf="parent">
 
     </TextView>
@@ -27,8 +39,9 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/open_sans"
         android:text="world"
+        android:layout_marginStart="10dp"
         android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/checkbox"
         app:layout_constraintTop_toBottomOf="@id/stock_text">
 
     </TextView>
