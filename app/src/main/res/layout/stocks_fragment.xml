@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ListView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/stocks_list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -24,7 +24,7 @@
     <RelativeLayout
         android:id="@+id/no_stocks"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:visibility="invisible">
 
         <ImageButton
@@ -48,5 +48,18 @@
 
         </TextView>
     </RelativeLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/cancel_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:src="@drawable/cancel"
+        android:visibility="gone"
+        android:clickable="true"
+        android:contentDescription="Cancel"
+        app:fabSize="normal">
+
+    </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
 </RelativeLayout>

@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -41,6 +43,10 @@ public class MonthlyTimeFragment extends Fragment implements CallToFragmentInter
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Animation anim = new TranslateAnimation(0f, 0f, 50f, 0f);
+        anim.setFillAfter(true);
+        anim.setDuration(600);
+        view.startAnimation(anim);
         shimmerFrameLayout = view.findViewById(R.id.shimmer_monthly);
         shimmerFrameLayout.startShimmer();
         ListView stockMonthListView = view.findViewById(R.id.stock_month_list_view);

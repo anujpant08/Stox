@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -17,7 +19,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.chip.Chip;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -28,7 +29,6 @@ public class DailyTimeFragment extends Fragment implements CallToFragmentInterfa
     private static final String TAG = "DailyTimeFragment";
     public StockDayCustomAdapter stockDayCustomAdapter;
     private StockDetailedViewModel stockDetailedViewModel;
-    private LinearProgressIndicator linearProgressIndicator;
     private ShimmerFrameLayout shimmerFrameLayout;
 
     public static void setStock(Stock stock) {
@@ -48,6 +48,10 @@ public class DailyTimeFragment extends Fragment implements CallToFragmentInterfa
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setListenerToInterface(this);
+        Animation anim = new TranslateAnimation(0f, 0f, 50f, 0f);
+        anim.setFillAfter(true);
+        anim.setDuration(600);
+        view.startAnimation(anim);
         shimmerFrameLayout = view.findViewById(R.id.shimmer_daily);
         shimmerFrameLayout.startShimmer();
         ListView stockDetailedListView = view.findViewById(R.id.stock_detailed_listview);
